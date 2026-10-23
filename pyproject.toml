@@ -3,6 +3,8 @@ name = "a3-antistasi-ultimate-save-data-parser"
 version = "0.0.3"
 description = "Add your description here"
 readme = "README.md"
+license = "MIT"
+license-files = ["LICEN[CS]E.*"]
 requires-python = ">=3.14"
 dependencies = [
     "msgspec>=0.22.0",
