@@ -9,17 +9,15 @@ import pytest
 
 from a3_antistasi_ultimate_save_data_parser.model import Params, Position, SaveData
 
-BASE_PATH = Path(__file__).parent
+_JSON_SAMPLE_PATH = Path(__file__).parent / "sample.json"
+"""NB: this is a composite sample and won't be internally consistent."""
 
 
 @pytest.fixture
 def sample_save_data_dict() -> dict[str, object]:
-    """Return sample data `dict`.
-
-    NB: this is a composite sample and won't be internally consistent.
-    """
-    data = (BASE_PATH / "sample.json").read_bytes()
-    return json.loads(data)
+    """Return sample data `dict`."""
+    str_ = _JSON_SAMPLE_PATH.read_text()
+    return json.loads(str_)
 
 
 class TestPosition:
@@ -88,10 +86,19 @@ class TestSaveData:
         # assert
         assert sample_data_keys.issuperset(required_field_names)
 
-    def test_save_data(self, sample_save_data_dict: dict[str, object]) -> None:
+    def test_create(self, sample_save_data_dict: dict[str, object]) -> None:
         """Test that `SaveData` can be created from sample `dict`."""
         # arrange
         # act
         my_save_data = msgspec.convert(sample_save_data_dict, type=SaveData)
+        # assert
+        assert isinstance(my_save_data, SaveData)
+
+    def test_create_from_str(self) -> None:
+        """Test that `SaveData` can be created from JSON `str`."""
+        # arrange
+        str_ = _JSON_SAMPLE_PATH.read_text()
+        # act
+        my_save_data = SaveData.decode_str(str_)
         # assert
         assert isinstance(my_save_data, SaveData)

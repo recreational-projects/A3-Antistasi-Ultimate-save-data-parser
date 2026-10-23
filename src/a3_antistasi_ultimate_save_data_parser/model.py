@@ -101,7 +101,7 @@ class SaveData(msgspec.Struct, kw_only=True):
     # "garrison": []
 
     @classmethod
-    def decode(cls, json_str: str) -> SaveData:
+    def decode_str(cls, json_str: str) -> SaveData:
         """Decode JSON string to `SaveData` object."""
         return msgspec.json.decode(json_str, type=SaveData)
 
