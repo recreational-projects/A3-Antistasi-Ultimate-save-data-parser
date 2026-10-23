@@ -53,6 +53,7 @@ extend-safe-fixes = [
     # Keep member names as source
 ]
 "test_*.py" = [
+    "D205",  # missing-blank-line-after-summary
     "PLR2004",  # magic-value-comparison
     "S101",  # assert
     "SLF001",  # private-member-access

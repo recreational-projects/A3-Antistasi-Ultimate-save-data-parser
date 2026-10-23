@@ -1,5 +1,6 @@
 """Implements `SaveData`."""
 
+import datetime as dt
 from typing import Self
 
 import msgspec
@@ -10,7 +11,7 @@ class SaveData(msgspec.Struct, kw_only=True):
 
     # key metadata
     name: str
-    saveTime: list[int]
+    saveTime: dt.datetime
     map: str
     serverID: bool
     campaignID: str
@@ -87,12 +88,13 @@ class SaveData(msgspec.Struct, kw_only=True):
     distanceSPWN: int
     chopForest: bool
     revealedZones: list[str]
+    dateX: dt.datetime
+
     # "HR_Garage": [],
     # "jna_dataList": [],
     # "weather": [],
     # "usesWurzelGarrison": true,
     # "staticsX": [],
-    # "dateX": [],
     # "prestigeBLUFOR": [],
     # "aggressionInvaders": [],
     # "testingTimerIsActive": false,
@@ -102,8 +104,25 @@ class SaveData(msgspec.Struct, kw_only=True):
 
     @classmethod
     def decode_str(cls, json_str: str) -> SaveData:
-        """Decode JSON string to `SaveData` object."""
-        return msgspec.json.decode(json_str, type=SaveData)
+        """Decode a JSON string into a `SaveData` object."""
+        raw = msgspec.json.decode(json_str)
+        raw["saveTime"] = _convert_7_element_datetime(raw["saveTime"])
+        raw["dateX"] = _convert_5_element_datetime(raw["dateX"])
+        return msgspec.convert(raw, type=cls)
+
+
+def _convert_5_element_datetime(value: tuple[int, int, int, int, int]) -> dt.datetime:
+    """Convert an array-like of 5 `int`s to a `dt.datetime` object in UTC."""
+    y, m, d, h, mn = value
+    return dt.datetime(y, m, d, h, mn, tzinfo=dt.UTC)
+
+
+def _convert_7_element_datetime(
+    value: tuple[int, int, int, int, int, int, int],
+) -> dt.datetime:
+    """Convert an array-like of 7 `int`s to a `dt.datetime` object in UTC."""
+    y, m, d, h, mn, s, ms = value
+    return dt.datetime(y, m, d, h, mn, s, ms * 1000, tzinfo=dt.UTC)
 
 
 class Position(msgspec.Struct, array_like=True, forbid_unknown_fields=True):
