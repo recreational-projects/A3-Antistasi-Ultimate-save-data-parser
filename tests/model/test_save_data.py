@@ -1,28 +1,12 @@
-"""The test suite."""
+"""Tests for `save_data` module."""
 
 import datetime as dt
-from pathlib import Path
-from typing import Any
 
 import msgspec
-import pytest
 
-from a3_antistasi_ultimate_save_data_parser.model import Params, Position, SaveData
-
-_JSON_SAMPLE_PATH = Path(__file__).parent / "sample.json"
-"""NB: this is a composite sample and won't be internally consistent."""
-
-
-@pytest.fixture
-def sample_str() -> str:
-    """Return sample data `str`."""
-    return _JSON_SAMPLE_PATH.read_text()
-
-
-@pytest.fixture
-def sample_dict(sample_str: str) -> dict[str, Any]:
-    """Return sample data `dict`."""
-    return msgspec.json.decode(sample_str)
+from a3_antistasi_ultimate_save_data_parser.model.params import Params
+from a3_antistasi_ultimate_save_data_parser.model.save_data import Position, SaveData
+from tests.model.conftest import DictNode
 
 
 class TestPosition:
@@ -46,44 +30,12 @@ class TestPosition:
         assert my_pos.z == 0
 
 
-class TestParams:
-    """Tests for `Params` class."""
-
-    @pytest.fixture
-    def sample_params_dict(self, sample_dict: dict[str, Any]) -> dict[str, Any]:
-        """Return sample data `dict`."""
-        return sample_dict["params"]
-
-    def test_sample_data_contains_all_required_params_members(
-        self,
-        sample_params_dict: dict[str, Any],
-    ) -> None:
-        """Test that sample contains keys for all `Params` fields.
-
-        Does not recurse.
-        """
-        # arrange
-        sample_data_keys = set(sample_params_dict.keys())
-        required_field_names = set(Params.__annotations__.keys())
-        # act
-        # assert
-        assert sample_data_keys.issuperset(required_field_names)
-
-    def test_create(self, sample_params_dict: dict[str, Any]) -> None:
-        """Test that `Params` can be created from sample `dict`."""
-        # arrange
-        # act
-        my_params = msgspec.convert(sample_params_dict, type=Params)
-        # assert
-        assert isinstance(my_params, Params)
-
-
 class TestSaveData:
     """Tests for `SaveData` class."""
 
     def test_sample_data_contains_all_required_save_data_members(
         self,
-        sample_dict: dict[str, Any],
+        sample_dict: DictNode,
     ) -> None:
         """Test that sample contains keys for all `SaveData` fields.
 

@@ -4,9 +4,9 @@ from pathlib import Path
 
 from rich import print as rprint
 
-from .model import SaveData
+from .model.save_data import SaveData
 
-BASE_PATH = Path(__file__).parent.parent.parent / "tests"
+BASE_PATH = Path(__file__).parent.parent.parent / "tests" / "model"
 
 
 with (BASE_PATH / "sample.json").open() as file:

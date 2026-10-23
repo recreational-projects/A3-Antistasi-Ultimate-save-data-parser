@@ -46,13 +46,20 @@ extend-safe-fixes = [
 #    "TC",  # flake8-type-checking
 ]
 
+[tool.ruff.lint.flake8-type-checking]
+runtime-evaluated-base-classes = ["msgspec.Struct"]
+
 [tool.ruff.lint.per-file-ignores]
-"src/a3_antistasi_ultimate_save_data_parser/model.py" = [
+"src/a3_antistasi_ultimate_save_data_parser/model/params.py" = [
+    "N815",  # mixed-case-variable-in-class-scope
+    # Keep member names as source
+]
+"src/a3_antistasi_ultimate_save_data_parser/model/save_data.py" = [
     "ERA001",  # commented-out-code
     "N815",  # mixed-case-variable-in-class-scope
     # Keep member names as source
 ]
-"test_*.py" = [
+"tests/*" = [
     "D205",  # missing-blank-line-after-summary
     "PLR2004",  # magic-value-comparison
     "S101",  # assert
