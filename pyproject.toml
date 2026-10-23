@@ -1,0 +1,59 @@
+[project]
+name = "a3-antistasi-ultimate-save-data-parser"
+version = "0.0.1"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.15"
+dependencies = [
+    "msgspec>=0.22.0",
+    "rich>=15.0.0",
+]
+
+[project.scripts]
+a3-antistasi-ultimate-savedata-parser = "a3_antistasi_ultimate_save_data_parser:main"
+
+[build-system]
+requires = ["uv_build>=0.13.5,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pyrefly>=1.4.0",
+    "pytest>=9.1.1",
+    "ruff>=0.17.2",
+    "ty>=0.0.91",
+]
+
+[tool.pyrefly]
+project-includes = [
+    "**/*.py*",
+    "**/*.ipynb",
+]
+
+[tool.ruff.lint]
+future-annotations = true
+select = ["ALL"]
+ignore = [
+    # Rules that conflict with Ruff formatter:
+    "COM812",  # missing-trailing-comma
+    # Ruff format choices:
+    "D203",  # incorrect-blank-line-before-class
+    "D213",  # multi-line-summary-second-line
+    # Other:
+    "CPY001",  # missing-copyright-notice
+]
+extend-safe-fixes = [
+#    "TC",  # flake8-type-checking
+]
+
+[tool.ruff.lint.per-file-ignores]
+"src/a3_antistasi_ultimate_save_data_parser/model.py" = [
+    "ERA001",  # commented-out-code
+    "N815",  # mixed-case-variable-in-class-scope
+    # Keep member names as source
+]
+"test_*.py" = [
+    "PLR2004",  # magic-value-comparison
+    "S101",  # assert
+    "SLF001",  # private-member-access
+]
