@@ -108,9 +108,23 @@ class SaveData(msgspec.Struct, kw_only=True):
     def decode_str(cls, json_str: str) -> SaveData:
         """Decode a JSON string into a `SaveData` object."""
         raw = msgspec.json.decode(json_str)
-        raw["saveTime"] = _convert_7_element_datetime(raw["saveTime"])
-        raw["dateX"] = _convert_5_element_datetime(raw["dateX"])
+        raw["saveTime"] = _convert_saveTime(raw["saveTime"])
+        raw["dateX"] = _convert_dateX(raw["dateX"])
         return msgspec.convert(raw, type=cls)
+
+
+def _convert_saveTime(
+    value: tuple[int, int, int, int, int, int, int],
+) -> dt.datetime:
+    """Convert `saveTime` field value."""
+    y, m, d, h, mn, s, ms = value
+    return dt.datetime(y, m, d, h, mn, s, ms * 1000, tzinfo=dt.UTC)
+
+
+def _convert_dateX(value: tuple[int, int, int, int, int]) -> dt.datetime:
+    """Convert `dateX` field value. Resulting datetime is not in a timezone."""
+    y, m, d, h, mn = value
+    return dt.datetime(y, m, d, h, mn, tzinfo=None)
 
 
 class Position(msgspec.Struct, array_like=True, forbid_unknown_fields=True):
@@ -124,17 +138,3 @@ class Position(msgspec.Struct, array_like=True, forbid_unknown_fields=True):
     def convert(cls, value: tuple[float, float] | tuple[float, float, float]) -> Self:
         """Convert an array-like of 2 or 3 `float`s to a `Position` object."""
         return msgspec.convert(value, type=cls)
-
-
-def _convert_5_element_datetime(value: tuple[int, int, int, int, int]) -> dt.datetime:
-    """Convert an array-like of 5 `int`s to a `dt.datetime` object in UTC."""
-    y, m, d, h, mn = value
-    return dt.datetime(y, m, d, h, mn, tzinfo=dt.UTC)
-
-
-def _convert_7_element_datetime(
-    value: tuple[int, int, int, int, int, int, int],
-) -> dt.datetime:
-    """Convert an array-like of 7 `int`s to a `dt.datetime` object in UTC."""
-    y, m, d, h, mn, s, ms = value
-    return dt.datetime(y, m, d, h, mn, s, ms * 1000, tzinfo=dt.UTC)

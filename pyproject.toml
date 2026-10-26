@@ -41,6 +41,7 @@ ignore = [
     "D213",  # multi-line-summary-second-line
     # Other:
     "CPY001",  # missing-copyright-notice
+    "DTZ001",  # call-datetime-without-tzinfo
 ]
 extend-safe-fixes = [
 #    "TC",  # flake8-type-checking
@@ -50,14 +51,10 @@ extend-safe-fixes = [
 runtime-evaluated-base-classes = ["msgspec.Struct"]
 
 [tool.ruff.lint.per-file-ignores]
-"src/a3_antistasi_ultimate_save_data_parser/model/params.py" = [
-    "N815",  # mixed-case-variable-in-class-scope
-    # Keep member names as source
-]
-"src/a3_antistasi_ultimate_save_data_parser/model/save_data.py" = [
+"src/a3_antistasi_ultimate_save_data_parser/model/*.py" = [
     "ERA001",  # commented-out-code
-    "N815",  # mixed-case-variable-in-class-scope
-    # Keep member names as source
+    "N802",  # invalid-function-name: keep refs to member names formatted as source
+    "N815",  # mixed-case-variable-in-class-scope: ditto
 ]
 "tests/*" = [
     "D205",  # missing-blank-line-after-summary

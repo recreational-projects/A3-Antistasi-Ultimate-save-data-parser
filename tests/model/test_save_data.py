@@ -62,4 +62,4 @@ class TestSaveData:
         assert my_save_data.saveTime == dt.datetime(
             2026, 10, 22, 14, 20, 40, 383000, tzinfo=dt.UTC
         )
-        assert my_save_data.dateX == dt.datetime(2035, 6, 11, 18, 43, tzinfo=dt.UTC)
+        assert my_save_data.dateX == dt.datetime(2035, 6, 11, 18, 43, tzinfo=None)
