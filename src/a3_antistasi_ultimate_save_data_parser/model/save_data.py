@@ -3,6 +3,7 @@
 import datetime as dt
 
 import msgspec
+from packaging.version import Version
 
 from .params import Params
 from .position import Position
@@ -17,7 +18,7 @@ class SaveData(msgspec.Struct, kw_only=True):
     map: str
     serverID: bool
     campaignID: str
-    version: str
+    version: Version
     params: Params
     factions: list[str]
 
@@ -112,6 +113,7 @@ class SaveData(msgspec.Struct, kw_only=True):
         # in-place conversions:
         raw["saveTime"] = _convert_saveTime(raw["saveTime"])
         raw["dateX"] = _convert_dateX(raw["dateX"])
+        raw["version"] = Version(raw["version"])
         return msgspec.convert(raw, type=cls)
 
 
