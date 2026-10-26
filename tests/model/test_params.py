@@ -1,11 +1,14 @@
 """Tests for `params` module."""
 
+from typing import TYPE_CHECKING
 
 import msgspec
 import pytest
 
 from a3_antistasi_ultimate_save_data_parser.model.params import Params
-from tests.model.conftest import DictNode
+
+if TYPE_CHECKING:
+    from tests.model.conftest import DictNode
 
 
 class TestParams:
@@ -16,20 +19,20 @@ class TestParams:
         """Return sample data `dict`."""
         return sample_dict["params"]
 
-    def test_sample_data_contains_all_required_params_members(
+    def test_sample_data_contains_all_members(
         self,
         sample_params_dict: DictNode,
     ) -> None:
-        """Test that sample contains keys for all `Params` fields.
+        """Test that sample data contains keys for all `Params` fields.
 
         Does not recurse.
         """
         # arrange
         sample_data_keys = set(sample_params_dict.keys())
-        required_field_names = set(Params.__annotations__.keys())
+        save_data_field_names = {f.name for f in msgspec.structs.fields(Params)}
         # act
         # assert
-        assert sample_data_keys.issuperset(required_field_names)
+        assert sample_data_keys.issuperset(save_data_field_names)
 
     def test_create(self, sample_params_dict: DictNode) -> None:
         """Test that `Params` can be created from sample `dict`."""
@@ -38,3 +41,13 @@ class TestParams:
         my_params = msgspec.convert(sample_params_dict, type=Params)
         # assert
         assert isinstance(my_params, Params)
+
+    def test_all_sample_keys_included(self, sample_params_dict: DictNode) -> None:
+        """TODO."""
+        # arrange
+
+        # act
+        my_params = msgspec.convert(sample_params_dict, type=Params)
+        # assert
+        _my_params_field_names = {f.name for f in msgspec.structs.fields(my_params)}
+        assert _my_params_field_names == sample_params_dict.keys()
