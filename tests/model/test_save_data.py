@@ -1,12 +1,15 @@
 """Tests for `save_data` module."""
 
 import datetime as dt
+from typing import TYPE_CHECKING
 
 import msgspec
 
 from a3_antistasi_ultimate_save_data_parser.model.params import Params
 from a3_antistasi_ultimate_save_data_parser.model.save_data import Position, SaveData
-from tests.model.conftest import DictNode
+
+if TYPE_CHECKING:
+    from tests.model.conftest import DictNode
 
 
 class TestPosition:
@@ -33,20 +36,20 @@ class TestPosition:
 class TestSaveData:
     """Tests for `SaveData` class."""
 
-    def test_sample_data_contains_all_required_save_data_members(
+    def test_sample_data_contains_all_members(
         self,
         sample_dict: DictNode,
     ) -> None:
-        """Test that sample contains keys for all `SaveData` fields.
+        """Test that sample data contains keys for all `SaveData` fields.
 
         Does not recurse.
         """
         # arrange
         sample_data_keys = set(sample_dict.keys())
-        required_field_names = set(SaveData.__annotations__.keys())
+        save_data_field_names = {f.name for f in msgspec.structs.fields(SaveData)}
         # act
         # assert
-        assert sample_data_keys.issuperset(required_field_names)
+        assert sample_data_keys.issuperset(save_data_field_names)
 
     def test_decode_str(self, sample_str: str) -> None:
         """Test `SaveData.decode_str`."""
