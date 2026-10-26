@@ -25,7 +25,7 @@ These instructions assume you have [uv](http://docs.astral.sh/uv/) installed.
 uv run -m a3_antistasi_ultimate_save_data_parser.main
 ```
 
-This should display parsed data like:
+This should display a representation of the parsed `SaveData` object like:
 ```pycon
 SaveData(
     name='RHS PKL Unsung 1 test',
@@ -33,7 +33,7 @@ SaveData(
     map='rhspkl',
     serverID=False,
     campaignID='10ba0f24-f1cd-4e5b-a2f2-9f6822a393a8',
-    version='12.2.0.0',
+    version=<Version('12.2.0.0')>,
     params=Params(
         A3A_attackHQProximityMul=3,
         A3A_builderAllowRoads=False,
