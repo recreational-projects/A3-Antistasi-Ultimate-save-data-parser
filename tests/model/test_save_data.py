@@ -6,31 +6,10 @@ from typing import TYPE_CHECKING
 import msgspec
 
 from a3_antistasi_ultimate_save_data_parser.model.params import Params
-from a3_antistasi_ultimate_save_data_parser.model.save_data import Position, SaveData
+from a3_antistasi_ultimate_save_data_parser.model.save_data import SaveData
 
 if TYPE_CHECKING:
     from tests.model.conftest import DictNode
-
-
-class TestPosition:
-    """Tests for `Position` class."""
-
-    def test_create(self) -> None:
-        """Test that `Position` can be created from 3-value `list`."""
-        # arrange
-        # act
-        my_pos = msgspec.convert([2080.5, 7477.51, 0.00137329], type=Position)
-        # assert
-        assert isinstance(my_pos, Position)
-
-    def test_create_from_2_values(self) -> None:
-        """Test that `Position` can be created from 2-value `list`."""
-        # arrange
-        # act
-        my_pos = msgspec.convert([1977.09, 412.31], type=Position)
-        # assert
-        assert isinstance(my_pos, Position)
-        assert my_pos.z == 0
 
 
 class TestSaveData:

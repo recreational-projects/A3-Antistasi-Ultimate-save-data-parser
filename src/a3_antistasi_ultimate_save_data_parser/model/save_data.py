@@ -1,11 +1,11 @@
 """Implements `SaveData`."""
 
 import datetime as dt
-from typing import Self
 
 import msgspec
 
 from .params import Params
+from .position import Position
 
 
 class SaveData(msgspec.Struct, kw_only=True):
@@ -127,16 +127,3 @@ def _convert_dateX(value: tuple[int, int, int, int, int]) -> dt.datetime:
     """Convert `dateX` field value. Resulting datetime is not in a timezone."""
     y, m, d, h, mn = value
     return dt.datetime(y, m, d, h, mn, tzinfo=None)
-
-
-class Position(msgspec.Struct, array_like=True, forbid_unknown_fields=True):
-    """Implements `Position`."""
-
-    x: float
-    y: float
-    z: float = 0
-
-    @classmethod
-    def convert(cls, value: tuple[float, float] | tuple[float, float, float]) -> Self:
-        """Convert an array-like of 2 or 3 `float`s to a `Position` object."""
-        return msgspec.convert(value, type=cls)
