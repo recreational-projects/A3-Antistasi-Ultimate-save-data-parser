@@ -11,7 +11,7 @@ from .params import Params
 class SaveData(msgspec.Struct, kw_only=True):
     """Implements `SaveData`."""
 
-    # key metadata
+    # Key metadata:
     name: str
     saveTime: dt.datetime
     map: str
@@ -21,23 +21,23 @@ class SaveData(msgspec.Struct, kw_only=True):
     params: Params
     factions: list[str]
 
-    # Rebel faction
+    # Rebel faction:
     hr: int
     resourcesFIA: int
     skillFIA: int
     randomizeRebelLoadoutUniforms: bool
     petrosPosition: Position
     unlockedVehicleTypes: list[str]
+    posHQ: list[object]
     watchpostsFIA: list[tuple[Position, list[str]]]
     roadblocksFIA: list[tuple[Position, list[str]]]
     hmgpostsFIA: list[tuple[Position, list[str]]]
     atpostsFIA: list[tuple[Position, list[str]]]
     aapostsFIA: list[tuple[Position, list[str]]]
     constructionsX: list[Position]
-    # "posHQ": []
-    # "rebelLoadouts": {},
+    rebelLoadouts: dict[str, object]
 
-    # Rival faction
+    # Rival faction:
     isRivalsDiscoveryQuestAssigned: bool
     areRivalsDiscovered: bool
     areRivalsDefeated: bool
@@ -46,9 +46,9 @@ class SaveData(msgspec.Struct, kw_only=True):
     nextRivalsLocationReveal: float
     mrkSDK: list[str]
     controlsSDK: list[str]
-    # "inactivityRivals": []
+    inactivityRivals: tuple[int, list[list[float]]]
 
-    # Occupants and Invaders
+    # Occupants and Invaders:
     areOccupantsDefeated: bool
     areInvadersDefeated: bool
     occupantsRadioKeys: int
@@ -58,7 +58,7 @@ class SaveData(msgspec.Struct, kw_only=True):
     mrkCSAT: list[str]
     prestigeOPFOR: list[float]
 
-    # Trader
+    # Trader:
     isTraderQuestCompleted: bool
     traderPosition: Position
     traderDiscount: int
@@ -71,10 +71,11 @@ class SaveData(msgspec.Struct, kw_only=True):
     # "player_01234567890123456_pluginsData": {},
     # "player_01234567890123456_rankPlayer": "SERGEANT",
 
+    # Other / TODO:
     DLC: list[int] = []
-    membersX: list[str] = []
+    membersX: list[str]
     HQKnowledge: list[object]
-    savedPlayers: list[str] = []
+    savedPlayers: list[str]
     A3A_fuelAmountleftArray: list[object]
     tasks: list[object]
     bombRuns: int
@@ -91,23 +92,24 @@ class SaveData(msgspec.Struct, kw_only=True):
     chopForest: bool
     revealedZones: list[str]
     dateX: dt.datetime
-
-    # "HR_Garage": [],
-    # "jna_dataList": [],
-    # "weather": [],
-    # "usesWurzelGarrison": true,
-    # "staticsX": [],
-    # "prestigeBLUFOR": [],
-    # "aggressionInvaders": [],
-    # "testingTimerIsActive": false,
-    # "saveDataPlugins": {},
-    # "addonVics": [],
-    # "garrison": []
+    weather: list[object]
+    HR_Garage: list[object]
+    jna_dataList: list[list[object]]
+    usesWurzelGarrison: bool
+    staticsX: list[list[object]]
+    prestigeBLUFOR: list[float]
+    aggressionInvaders: list[object]
+    testingTimerIsActive: bool
+    saveDataPlugins: dict[object, object]
+    addonVics: list[object]
+    garrison: list[list[object]]
 
     @classmethod
     def decode_str(cls, json_str: str) -> SaveData:
         """Decode a JSON string into a `SaveData` object."""
-        raw = msgspec.json.decode(json_str)
+        raw = msgspec.json.decode(json_str)  # naive conversion to Python builtins
+
+        # in-place conversions:
         raw["saveTime"] = _convert_saveTime(raw["saveTime"])
         raw["dateX"] = _convert_dateX(raw["dateX"])
         return msgspec.convert(raw, type=cls)

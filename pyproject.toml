@@ -29,6 +29,7 @@ project-includes = [
     "**/*.py*",
     "**/*.ipynb",
 ]
+search-path = ["."]  # required due to imports from `tests.model.conftest`.
 
 [tool.ruff.lint]
 future-annotations = true
@@ -42,6 +43,7 @@ ignore = [
     # Other:
     "CPY001",  # missing-copyright-notice
     "DTZ001",  # call-datetime-without-tzinfo
+    "ERA001",  # commented-out-code
 ]
 extend-safe-fixes = [
 #    "TC",  # flake8-type-checking
@@ -52,7 +54,6 @@ runtime-evaluated-base-classes = ["msgspec.Struct"]
 
 [tool.ruff.lint.per-file-ignores]
 "src/a3_antistasi_ultimate_save_data_parser/model/*.py" = [
-    "ERA001",  # commented-out-code
     "N802",  # invalid-function-name: keep refs to member names formatted as source
     "N815",  # mixed-case-variable-in-class-scope: ditto
 ]
