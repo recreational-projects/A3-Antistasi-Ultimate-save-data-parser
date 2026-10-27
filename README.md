@@ -34,6 +34,7 @@ uv run -m a3_antistasi_ultimate_save_data_parser.main
 This should display a representation of a `SaveData` object like:
 ```pycon
 SaveData(
+    a3_antistasi_ultimate_save_data_parser_version='0.0.4',
     name='RHS PKL Unsung 1 test',
     saveTime=datetime.datetime(2026, 10, 22, 14, 20, 40, 383000, tzinfo=datetime.timezone.utc),
     map='rhspkl',

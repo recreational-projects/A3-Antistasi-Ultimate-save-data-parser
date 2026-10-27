@@ -17,5 +17,3 @@ rprint("\nSOURCE JSON -> SAVEDATA OBJECT")
 rprint(save_data_obj)
 rprint("\nSAVEDATA OBJECT -> JSON")
 rprint(msgspec.json.encode(save_data_obj))
-
-

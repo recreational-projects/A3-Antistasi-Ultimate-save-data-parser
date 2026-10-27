@@ -16,7 +16,10 @@ if TYPE_CHECKING:
 class TestSaveData:
     """Tests for `SaveData` class."""
 
-    DERIVED_FIELDS: ClassVar[set[str]] = {"players"}
+    DERIVED_FIELDS: ClassVar[set[str]] = {
+        "a3_antistasi_ultimate_save_data_parser_version",
+        "players",
+    }
 
     def test_sample_data_contains_all_members(
         self,

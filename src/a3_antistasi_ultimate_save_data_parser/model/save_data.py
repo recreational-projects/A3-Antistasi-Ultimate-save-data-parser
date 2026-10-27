@@ -2,7 +2,7 @@
 
 import datetime as dt
 from typing import TYPE_CHECKING
-
+import importlib.metadata
 import msgspec
 
 from ._types import SteamId64
@@ -16,6 +16,8 @@ if TYPE_CHECKING:
 
 class SaveData(msgspec.Struct, kw_only=True):
     """Implements `SaveData`."""
+
+    a3_antistasi_ultimate_save_data_parser_version: str
 
     # Key metadata:
     name: str
@@ -116,6 +118,9 @@ class SaveData(msgspec.Struct, kw_only=True):
         raw["membersX"] = _convert_iterable_str_to_int(raw["membersX"])
         raw["savedPlayers"] = _convert_iterable_str_to_int(raw["savedPlayers"])
         raw["players"] = Player.dict_from_raw_dict(raw)
+        raw["a3_antistasi_ultimate_save_data_parser_version"] = (
+            importlib.metadata.version("a3_antistasi_ultimate_save_data_parser")
+        )
         return msgspec.convert(raw, type=cls)
 
 
