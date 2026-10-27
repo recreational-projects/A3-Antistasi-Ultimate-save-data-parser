@@ -1,0 +1,49 @@
+name: Python application with uv
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v7.0.1
+
+    - name: Install uv - latest if not defined in `pyproject.toml`
+      # Action version does not determine which uv version to install
+      uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+
+    - name: Setup Python
+      # Faster than using uv, as it caches Python on GitHub runner
+      uses: actions/setup-python@v7.1.0
+      with:
+        python-version-file: ".python-version"
+
+    - name: Install the project
+      run: uv sync --locked
+
+    - name: Lint with ruff
+      # by default: exit with error if rule violations
+      run: uv run ruff check --output-format=github
+
+    - name: Lint format with ruff
+      # by default: exit with error if rule violations
+      run: uv run ruff format --output-format=github
+
+    - name: Type check with pyrefly
+      run: uv run pyrefly check
+
+    - name: Test with pytest
+      run: uv run pytest
