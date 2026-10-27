@@ -73,6 +73,8 @@ SaveData(
     ...
 )
 ``` 
+then the result of encoding the `SaveData` object to JSON (which won't match the original JSON).
+
 ## Development
 
 Run tests:
