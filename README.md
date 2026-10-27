@@ -39,7 +39,7 @@ SaveData(
     map='rhspkl',
     serverID=False,
     campaignID='10ba0f24-f1cd-4e5b-a2f2-9f6822a393a8',
-    version=<Version('12.2.0.0')>,
+    version='12.2.0.0',
     params=Params(
         A3A_attackHQProximityMul=3,
         A3A_builderAllowRoads=False,

@@ -4,7 +4,6 @@ import datetime as dt
 from typing import TYPE_CHECKING
 
 import msgspec
-from packaging.version import Version
 
 from ._types import SteamId64
 from .params import Params
@@ -24,7 +23,7 @@ class SaveData(msgspec.Struct, kw_only=True):
     map: str
     serverID: bool
     campaignID: str
-    version: Version
+    version: str
     params: Params
     factions: list[str]
 
@@ -114,7 +113,6 @@ class SaveData(msgspec.Struct, kw_only=True):
         # in-place conversions to builtins / external types
         raw["saveTime"] = _convert_saveTime(raw["saveTime"])
         raw["dateX"] = _convert_dateX(raw["dateX"])
-        raw["version"] = Version(raw["version"])
         raw["membersX"] = _convert_iterable_str_to_int(raw["membersX"])
         raw["savedPlayers"] = _convert_iterable_str_to_int(raw["savedPlayers"])
         raw["players"] = Player.dict_from_raw_dict(raw)

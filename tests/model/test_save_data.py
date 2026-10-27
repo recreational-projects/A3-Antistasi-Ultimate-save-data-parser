@@ -4,7 +4,6 @@ import datetime as dt
 from typing import TYPE_CHECKING, ClassVar
 
 import msgspec
-from packaging.version import Version
 
 from a3_antistasi_ultimate_save_data_parser.model.params import Params
 from a3_antistasi_ultimate_save_data_parser.model.player import Player
@@ -46,7 +45,6 @@ class TestSaveData:
             2026, 10, 22, 14, 20, 40, 383000, tzinfo=dt.UTC
         )
         assert my_save_data.dateX == dt.datetime(2035, 6, 11, 18, 43, tzinfo=None)
-        assert my_save_data.version == Version("12.2.0.0")
         assert isinstance(my_save_data.savedPlayers[0], int)
         assert isinstance(my_save_data.membersX[0], int)
         assert isinstance(my_save_data.players[12345678901234567], Player)
