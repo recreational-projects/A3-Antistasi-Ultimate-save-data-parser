@@ -13,3 +13,4 @@ with (BASE_PATH / "sample.json").open() as file:
     save_data_obj = SaveData.decode_str(file.read())
 
 rprint(save_data_obj)
+

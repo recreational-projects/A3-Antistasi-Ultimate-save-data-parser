@@ -1,12 +1,13 @@
 """Tests for `save_data` module."""
 
 import datetime as dt
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 import msgspec
 from packaging.version import Version
 
 from a3_antistasi_ultimate_save_data_parser.model.params import Params
+from a3_antistasi_ultimate_save_data_parser.model.player import Player
 from a3_antistasi_ultimate_save_data_parser.model.save_data import SaveData
 
 if TYPE_CHECKING:
@@ -16,11 +17,13 @@ if TYPE_CHECKING:
 class TestSaveData:
     """Tests for `SaveData` class."""
 
+    DERIVED_FIELDS: ClassVar[set[str]] = {"players"}
+
     def test_sample_data_contains_all_members(
         self,
         sample_dict: JSONDictNode,
     ) -> None:
-        """Test that sample data contains keys for all `SaveData` fields.
+        """Test that sample data contains keys for all non-derived `SaveData` fields.
 
         Does not recurse.
         """
@@ -29,7 +32,7 @@ class TestSaveData:
         save_data_field_names = {f.name for f in msgspec.structs.fields(SaveData)}
         # act
         # assert
-        assert sample_data_keys.issuperset(save_data_field_names)
+        assert sample_data_keys.issuperset(save_data_field_names - self.DERIVED_FIELDS)
 
     def test_decode_str(self, sample_str: str) -> None:
         """Test `SaveData.decode_str`."""
@@ -46,3 +49,4 @@ class TestSaveData:
         assert my_save_data.version == Version("12.2.0.0")
         assert isinstance(my_save_data.savedPlayers[0], int)
         assert isinstance(my_save_data.membersX[0], int)
+        assert isinstance(my_save_data.players[12345678901234567], Player)

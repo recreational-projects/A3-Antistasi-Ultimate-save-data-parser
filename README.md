@@ -8,7 +8,13 @@ that's been exported from the game as JSON
 
 * Datetime fields are parsed as Python `datetime.datetime` built-in objects
 
-* Position fields are parsed as a custom `Position` class with `x`, `y`, `z` fields
+* Position fields are parsed as a `Position` class with `x`, `y`, `z` fields
+
+* `params` is parsed as a `Params` class
+
+* SteamId64s are converted to int
+
+* players' data is parsed to `SaveData.players`, a mapping of SteamId64: `Player` class
 
 
 ## Usage
@@ -25,7 +31,7 @@ These instructions assume you have [uv](http://docs.astral.sh/uv/) installed.
 uv run -m a3_antistasi_ultimate_save_data_parser.main
 ```
 
-This should display a representation of the parsed `SaveData` object like:
+This should display a representation of a `SaveData` object like:
 ```pycon
 SaveData(
     name='RHS PKL Unsung 1 test',
@@ -50,6 +56,20 @@ SaveData(
     skillFIA=7,
     randomizeRebelLoadoutUniforms=True,
     petrosPosition=Position(x=2080.5, y=7477.51, z=0.00137329),
+    membersX=[12345678901234567],
+    savedPlayers=[12345678901234567],
+    players={
+        12345678901234567: Player(
+            scorePlayer=462,
+            loadoutPlayer=[
+            ..
+            ],
+            moneyX=4304,
+            personalGarage=[],
+            pluginsData={},
+            rankPlayer='SERGEANT'
+        )
+    },
     ...
 )
 ``` 

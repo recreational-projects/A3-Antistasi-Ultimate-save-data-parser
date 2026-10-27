@@ -8,6 +8,7 @@ from packaging.version import Version
 
 from ._types import SteamId64
 from .params import Params
+from .player import Player
 from .position import Position
 
 if TYPE_CHECKING:
@@ -69,13 +70,8 @@ class SaveData(msgspec.Struct, kw_only=True):
     traderPosition: Position
     traderDiscount: int
 
-    # Player state
-    # "player_01234567890123456_scorePlayer": int
-    # "player_01234567890123456_loadoutPlayer": []
-    # "player_01234567890123456_moneyX": int
-    # "player_01234567890123456_personalGarage": []
-    # "player_01234567890123456_pluginsData": {},
-    # "player_01234567890123456_rankPlayer": "SERGEANT",
+    # Players' state:
+    players: dict[SteamId64, Player] = {}
 
     # Other / TODO:
     DLC: list[int] = []
@@ -121,6 +117,7 @@ class SaveData(msgspec.Struct, kw_only=True):
         raw["version"] = Version(raw["version"])
         raw["membersX"] = _convert_iterable_str_to_int(raw["membersX"])
         raw["savedPlayers"] = _convert_iterable_str_to_int(raw["savedPlayers"])
+        raw["players"] = Player.dict_from_raw_dict(raw)
         return msgspec.convert(raw, type=cls)
 
 
