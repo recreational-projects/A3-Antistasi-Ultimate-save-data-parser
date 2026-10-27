@@ -10,7 +10,7 @@ from a3_antistasi_ultimate_save_data_parser.model.params import Params
 from a3_antistasi_ultimate_save_data_parser.model.save_data import SaveData
 
 if TYPE_CHECKING:
-    from tests.model.conftest import DictNode
+    from a3_antistasi_ultimate_save_data_parser.model._types import JSONDictNode
 
 
 class TestSaveData:
@@ -18,7 +18,7 @@ class TestSaveData:
 
     def test_sample_data_contains_all_members(
         self,
-        sample_dict: DictNode,
+        sample_dict: JSONDictNode,
     ) -> None:
         """Test that sample data contains keys for all `SaveData` fields.
 
@@ -44,3 +44,5 @@ class TestSaveData:
         )
         assert my_save_data.dateX == dt.datetime(2035, 6, 11, 18, 43, tzinfo=None)
         assert my_save_data.version == Version("12.2.0.0")
+        assert isinstance(my_save_data.savedPlayers[0], int)
+        assert isinstance(my_save_data.membersX[0], int)

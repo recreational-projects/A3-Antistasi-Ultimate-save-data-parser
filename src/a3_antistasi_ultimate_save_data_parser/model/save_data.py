@@ -1,12 +1,17 @@
 """Implements `SaveData`."""
 
 import datetime as dt
+from typing import TYPE_CHECKING
 
 import msgspec
 from packaging.version import Version
 
+from ._types import SteamId64
 from .params import Params
 from .position import Position
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 
 class SaveData(msgspec.Struct, kw_only=True):
@@ -74,9 +79,9 @@ class SaveData(msgspec.Struct, kw_only=True):
 
     # Other / TODO:
     DLC: list[int] = []
-    membersX: list[str]
+    membersX: list[SteamId64]
+    savedPlayers: list[SteamId64]
     HQKnowledge: list[object]
-    savedPlayers: list[str]
     A3A_fuelAmountleftArray: list[object]
     tasks: list[object]
     bombRuns: int
@@ -110,10 +115,12 @@ class SaveData(msgspec.Struct, kw_only=True):
         """Decode a JSON string into a `SaveData` object."""
         raw = msgspec.json.decode(json_str)  # naive conversion to Python builtins
 
-        # in-place conversions:
+        # in-place conversions to builtins / external types
         raw["saveTime"] = _convert_saveTime(raw["saveTime"])
         raw["dateX"] = _convert_dateX(raw["dateX"])
         raw["version"] = Version(raw["version"])
+        raw["membersX"] = _convert_iterable_str_to_int(raw["membersX"])
+        raw["savedPlayers"] = _convert_iterable_str_to_int(raw["savedPlayers"])
         return msgspec.convert(raw, type=cls)
 
 
@@ -129,3 +136,8 @@ def _convert_dateX(value: tuple[int, int, int, int, int]) -> dt.datetime:
     """Convert `dateX` field value. Resulting datetime is not in a timezone."""
     y, m, d, h, mn = value
     return dt.datetime(y, m, d, h, mn, tzinfo=None)
+
+
+def _convert_iterable_str_to_int(value: Iterable[str]) -> list[int]:
+    """Convert an iterable of `str`s to list of `int`s`."""
+    return [int(x) for x in value]

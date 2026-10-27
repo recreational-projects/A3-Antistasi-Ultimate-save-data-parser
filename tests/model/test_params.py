@@ -8,20 +8,20 @@ import pytest
 from a3_antistasi_ultimate_save_data_parser.model.params import Params
 
 if TYPE_CHECKING:
-    from tests.model.conftest import DictNode
+    from a3_antistasi_ultimate_save_data_parser.model._types import JSONDictNode
 
 
 class TestParams:
     """Tests for `Params` class."""
 
     @pytest.fixture
-    def sample_params_dict(self, sample_dict: DictNode) -> DictNode:
+    def sample_params_dict(self, sample_dict: JSONDictNode) -> JSONDictNode:
         """Return sample data `dict`."""
         return sample_dict["params"]
 
     def test_sample_data_contains_all_members(
         self,
-        sample_params_dict: DictNode,
+        sample_params_dict: JSONDictNode,
     ) -> None:
         """Test that sample data contains keys for all `Params` fields.
 
@@ -34,7 +34,7 @@ class TestParams:
         # assert
         assert sample_data_keys.issuperset(save_data_field_names)
 
-    def test_create(self, sample_params_dict: DictNode) -> None:
+    def test_convert_from_dict(self, sample_params_dict: JSONDictNode) -> None:
         """Test that `Params` can be created from sample `dict`."""
         # arrange
         # act
@@ -42,7 +42,7 @@ class TestParams:
         # assert
         assert isinstance(my_params, Params)
 
-    def test_all_sample_keys_included(self, sample_params_dict: DictNode) -> None:
+    def test_all_sample_keys_included(self, sample_params_dict: JSONDictNode) -> None:
         """TODO."""
         # arrange
 

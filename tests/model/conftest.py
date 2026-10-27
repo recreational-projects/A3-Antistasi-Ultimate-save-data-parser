@@ -1,15 +1,16 @@
 """Define package-level fixtures for testing."""
 
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING
 
 import msgspec
 import pytest
 
+if TYPE_CHECKING:
+    from a3_antistasi_ultimate_save_data_parser.model._types import JSONDictNode
+
 _JSON_SAMPLE_PATH = Path(__file__).parent / "sample.json"
 """NB: this is a composite sample and won't be internally consistent."""
-
-type DictNode = dict[str, Any]
 
 
 @pytest.fixture
@@ -19,6 +20,6 @@ def sample_str() -> str:
 
 
 @pytest.fixture
-def sample_dict(sample_str: str) -> DictNode:
+def sample_dict(sample_str: str) -> JSONDictNode:
     """Return sample data `dict`."""
     return msgspec.json.decode(sample_str)

@@ -32,7 +32,6 @@ project-includes = [
     "**/*.py*",
     "**/*.ipynb",
 ]
-search-path = ["."]  # required due to imports from `tests.model.conftest`.
 
 [tool.ruff.lint]
 future-annotations = true
