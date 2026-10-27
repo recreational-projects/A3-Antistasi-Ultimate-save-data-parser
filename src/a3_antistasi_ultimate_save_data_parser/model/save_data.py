@@ -1,8 +1,9 @@
 """Implements `SaveData`."""
 
 import datetime as dt
-from typing import TYPE_CHECKING
 import importlib.metadata
+from typing import TYPE_CHECKING
+
 import msgspec
 
 from ._types import SteamId64
