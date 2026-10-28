@@ -10,6 +10,7 @@ import pytest
 
 from a3_antistasi_ultimate_save_data_parser.params import Params
 from a3_antistasi_ultimate_save_data_parser.player_data import PlayerData
+from a3_antistasi_ultimate_save_data_parser.position import Position
 from a3_antistasi_ultimate_save_data_parser.save_data import SaveData
 
 if TYPE_CHECKING:
@@ -51,7 +52,6 @@ class TestSaveData:
         sd = SaveData.decode_str(base_sample_str)
         # assert
         assert isinstance(sd, SaveData)
-        assert isinstance(sd.params, Params)
         _pkg_minor_version = _PACKAGE_MINOR_VERSION.split(".")[0:2]
         assert (
             sd.__a3_antistasi_ultimate_save_data_parser_version__.split(".")[0:2]
@@ -66,6 +66,8 @@ class TestSaveData:
         assert isinstance(sd.savedPlayers[0], int)
         assert isinstance(sd.membersX[0], int)
         assert isinstance(sd.players[12345678901234567], PlayerData)
+        assert sd.traderPosition is None
+        assert isinstance(sd.params, Params)
 
     @pytest.fixture
     def complex_sample_str(self, base_sample_dict: JSONDictNode) -> str:
@@ -82,9 +84,10 @@ class TestSaveData:
         sd = SaveData.decode_str(complex_sample_str)
         # assert
         assert isinstance(sd, SaveData)
-        assert isinstance(sd.params, Params)
         assert sd.aggressionOccupants == [1, [[19.2, -0.2], [-4.25, 0.25]]]
         assert _is_list_of_list(sd.A3A_fuelAmountleftArray)
+        assert isinstance(sd.traderPosition, Position)
+        assert isinstance(sd.params, Params)
 
 
 def _is_list_of_list(obj: object) -> bool:
