@@ -23,13 +23,13 @@ Experimental/alpha.
 From GitHub, specifying a version via tag, e.g:
 
 ```shell
-uv add git+https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser --tag v0.0.4
+uv add git+https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser --tag v0.2.0
 ```
 
 or with `pip`:
 
 ```shell
-pip install git+https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser@v0.0.4
+pip install git+https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser@v0.2.0
 ```
 
 
