@@ -83,7 +83,7 @@ class SaveData(msgspec.Struct, kw_only=True):
 
     # Trader:
     isTraderQuestCompleted: bool
-    traderPosition: Position
+    traderPosition: Position | None
     traderDiscount: int
 
     # Other / TODO:
@@ -125,6 +125,7 @@ class SaveData(msgspec.Struct, kw_only=True):
         raw["dateX"] = _convert_dateX(raw["dateX"])
         raw["membersX"] = _convert_iterable_str_to_int(raw["membersX"])
         raw["savedPlayers"] = _convert_iterable_str_to_int(raw["savedPlayers"])
+        raw["traderPosition"] = _convert_traderPosition(raw["traderPosition"])
 
         _pkg_version = importlib.metadata.version(
             "a3_antistasi_ultimate_save_data_parser"
@@ -155,6 +156,13 @@ def _convert_dateX(value: tuple[int, int, int, int, int]) -> dt.datetime:
     """Convert `dateX` field value. Resulting datetime is not in a timezone."""
     y, m, d, h, mn = value
     return dt.datetime(y, m, d, h, mn, tzinfo=None)
+
+
+def _convert_traderPosition(value: Iterable[float]) -> Position | None:
+    if not value:
+        return None
+
+    return Position(*value)
 
 
 def _convert_iterable_str_to_int(value: Iterable[str]) -> list[int]:

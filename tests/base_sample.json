@@ -7268,10 +7268,7 @@
   "player_12345678901234567_personalGarage": [],
   "distanceSPWN": 1100,
   "areOccupantsDefeated": false,
-  "traderPosition": [
-    1977.09,
-    412.31
-  ],
+  "traderPosition": [],
   "occupantsRadioKeys": 0,
   "hr": 180,
   "campaignID": "10ba0f24-f1cd-4e5b-a2f2-9f6822a393a8",
