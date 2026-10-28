@@ -13,12 +13,18 @@ dependencies = [
 [project.scripts]
 a3-antistasi-ultimate-savedata-parser = "a3_antistasi_ultimate_save_data_parser:main"
 
+[project.urls]
+Documentation = "https://recreational-projects.github.io/A3-Antistasi-Ultimate-save-data-parser/"
+Repository = "https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser"
+Changelog = "https://github.com/recreational-projects/A3-antistasi-Ultimate-save-data-parser/blob/main/CHANGELOG.md"
+
 [build-system]
 requires = ["uv_build>=0.13.5,<0.14.0"]
 build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "pdoc>=16.0.0",
     "pyrefly>=1.4.0",
     "pytest>=9.1.1",
     "ruff>=0.17.2",
