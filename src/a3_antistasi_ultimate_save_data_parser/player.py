@@ -4,10 +4,10 @@ from typing import TYPE_CHECKING, Any, Self
 
 import msgspec
 
-from a3_antistasi_ultimate_save_data_parser.model._types import LEN_STEAM_ID64
+from a3_antistasi_ultimate_save_data_parser._types import LEN_STEAM_ID64
 
 if TYPE_CHECKING:
-    from a3_antistasi_ultimate_save_data_parser.model._types import SteamId64
+    from a3_antistasi_ultimate_save_data_parser._types import SteamId64
 
 _PLAYER_FIELDS_PREFIX = "player_"
 

@@ -7,7 +7,7 @@ import msgspec
 import pytest
 
 if TYPE_CHECKING:
-    from a3_antistasi_ultimate_save_data_parser.model._types import JSONDictNode
+    from a3_antistasi_ultimate_save_data_parser._types import JSONDictNode
 
 _JSON_SAMPLE_PATH = Path(__file__).parent / "sample.json"
 """NB: this is a composite sample and won't be internally consistent."""

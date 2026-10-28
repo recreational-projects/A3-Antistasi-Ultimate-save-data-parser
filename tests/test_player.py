@@ -2,10 +2,10 @@
 
 from typing import TYPE_CHECKING
 
-from a3_antistasi_ultimate_save_data_parser.model.player import Player
+from a3_antistasi_ultimate_save_data_parser.player import Player
 
 if TYPE_CHECKING:
-    from a3_antistasi_ultimate_save_data_parser.model._types import JSONDictNode
+    from a3_antistasi_ultimate_save_data_parser._types import JSONDictNode
 
 
 class TestPlayer:
