@@ -16,19 +16,33 @@ if TYPE_CHECKING:
 
 
 class SaveData(msgspec.Struct, kw_only=True):
-    """Implements `SaveData`."""
+    """Provides an interface for Antistasi Ultimate JSON save data."""
 
     a3_antistasi_ultimate_save_data_parser_version: str
+    """The version of this library used to parse the instance."""
 
     # Key metadata:
     name: str
     saveTime: dt.datetime
-    map: str
+    """UTC timestamp of the save."""
     serverID: bool
     campaignID: str
     version: str
     params: Params
+    """Mission parameters as a `.params.Params` instance."""
     factions: list[str]
+    membersX: list[SteamId64]
+    """`list` of `SteamId64`s."""
+    savedPlayers: list[SteamId64]
+    """`list` of `SteamId64`s."""
+    players: dict[SteamId64, Player] = {}
+    """`dict` mapping `SteamId64` to `.player.Player` instances."""
+
+    # World:
+    map: str
+    dateX: dt.datetime
+    """Geographic time within the mission; no timezone."""
+    weather: list[object]
 
     # Rebel faction:
     hr: int
@@ -72,13 +86,8 @@ class SaveData(msgspec.Struct, kw_only=True):
     traderPosition: Position
     traderDiscount: int
 
-    # Players' state:
-    players: dict[SteamId64, Player] = {}
-
     # Other / TODO:
     DLC: list[int] = []
-    membersX: list[SteamId64]
-    savedPlayers: list[SteamId64]
     HQKnowledge: list[object]
     A3A_fuelAmountleftArray: list[object]
     tasks: list[object]
@@ -95,8 +104,6 @@ class SaveData(msgspec.Struct, kw_only=True):
     distanceSPWN: int
     chopForest: bool
     revealedZones: list[str]
-    dateX: dt.datetime
-    weather: list[object]
     HR_Garage: list[object]
     jna_dataList: list[list[object]]
     usesWurzelGarrison: bool
@@ -110,7 +117,7 @@ class SaveData(msgspec.Struct, kw_only=True):
 
     @classmethod
     def decode_str(cls, json_str: str) -> SaveData:
-        """Decode a JSON string into a `SaveData` object."""
+        """Decode a JSON string into a `SaveData` instance."""
         raw = msgspec.json.decode(json_str)  # naive conversion to Python builtins
 
         # in-place conversions to builtins / external types

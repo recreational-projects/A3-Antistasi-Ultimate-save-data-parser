@@ -13,7 +13,7 @@ _PLAYER_FIELDS_PREFIX = "player_"
 
 
 class Player(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
-    """Implements `Player`."""
+    """Data for a player."""
 
     scorePlayer: int
     loadoutPlayer: list[object]

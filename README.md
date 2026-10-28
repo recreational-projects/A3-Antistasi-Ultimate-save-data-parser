@@ -122,3 +122,8 @@ Run tests:
 ```shell
 uv run pytest
 ```
+
+Serve docs locally:
+```shell
+uv run pdoc a3_antistasi_ultimate_save_data_parser
+```

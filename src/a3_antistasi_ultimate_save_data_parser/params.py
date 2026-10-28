@@ -4,7 +4,7 @@ import msgspec
 
 
 class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
-    """Implements `Params`."""
+    """Mission parameters."""
 
     A3A_attackHQProximityMul: int
     A3A_builderAllowRoads: bool
