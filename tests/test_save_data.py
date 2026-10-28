@@ -12,12 +12,14 @@ from a3_antistasi_ultimate_save_data_parser.save_data import SaveData
 if TYPE_CHECKING:
     from a3_antistasi_ultimate_save_data_parser._types import JSONDictNode
 
+PACKAGE_MINOR_VERSION = "0.1.x"
+
 
 class TestSaveData:
     """Tests for `SaveData` class."""
 
     DERIVED_FIELDS: ClassVar[set[str]] = {
-        "a3_antistasi_ultimate_save_data_parser_version",
+        "__a3_antistasi_ultimate_save_data_parser_version__",
         "players",
     }
 
@@ -44,6 +46,13 @@ class TestSaveData:
         # assert
         assert isinstance(my_save_data, SaveData)
         assert isinstance(my_save_data.params, Params)
+        _pkg_minor_version = PACKAGE_MINOR_VERSION.split(".")[0:2]
+        assert (
+            my_save_data.__a3_antistasi_ultimate_save_data_parser_version__.split(".")[
+                0:2
+            ]
+            == _pkg_minor_version
+        )
         assert my_save_data.saveTime == dt.datetime(
             2026, 10, 22, 14, 20, 40, 383000, tzinfo=dt.UTC
         )

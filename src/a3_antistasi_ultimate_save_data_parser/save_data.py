@@ -18,8 +18,8 @@ if TYPE_CHECKING:
 class SaveData(msgspec.Struct, kw_only=True):
     """Provides an interface for Antistasi Ultimate JSON save data."""
 
-    a3_antistasi_ultimate_save_data_parser_version: str
-    """The version of this library used to parse the instance."""
+    __a3_antistasi_ultimate_save_data_parser_version__: str
+    """@public The version of this library used to parse the JSON data."""
 
     # Key metadata:
     name: str
@@ -120,16 +120,27 @@ class SaveData(msgspec.Struct, kw_only=True):
         """Decode a JSON string into a `SaveData` instance."""
         raw = msgspec.json.decode(json_str)  # naive conversion to Python builtins
 
-        # in-place conversions to builtins / external types
+        # in-place conversions to builtins / external types:
         raw["saveTime"] = _convert_saveTime(raw["saveTime"])
         raw["dateX"] = _convert_dateX(raw["dateX"])
         raw["membersX"] = _convert_iterable_str_to_int(raw["membersX"])
         raw["savedPlayers"] = _convert_iterable_str_to_int(raw["savedPlayers"])
-        raw["players"] = Player._dict_from_raw_dict(raw)  # noqa: SLF001
-        raw["a3_antistasi_ultimate_save_data_parser_version"] = (
-            importlib.metadata.version("a3_antistasi_ultimate_save_data_parser")
+
+        _pkg_version = importlib.metadata.version(
+            "a3_antistasi_ultimate_save_data_parser"
         )
-        return msgspec.convert(raw, type=cls)
+        _player_dict = Player._dict_from_raw_dict(raw)  # noqa: SLF001
+        additional_fields = {
+            "__a3_antistasi_ultimate_save_data_parser_version__": _pkg_version,
+            "players": _player_dict,
+        }
+        return msgspec.convert(
+            {
+                **raw,
+                **additional_fields,
+            },
+            type=cls,
+        )
 
 
 def _convert_saveTime(
