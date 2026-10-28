@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, ClassVar
 import msgspec
 
 from a3_antistasi_ultimate_save_data_parser.params import Params
-from a3_antistasi_ultimate_save_data_parser.player import Player
+from a3_antistasi_ultimate_save_data_parser.player_data import PlayerData
 from a3_antistasi_ultimate_save_data_parser.save_data import SaveData
 
 if TYPE_CHECKING:
@@ -59,4 +59,4 @@ class TestSaveData:
         assert my_save_data.dateX == dt.datetime(2035, 6, 11, 18, 43, tzinfo=None)
         assert isinstance(my_save_data.savedPlayers[0], int)
         assert isinstance(my_save_data.membersX[0], int)
-        assert isinstance(my_save_data.players[12345678901234567], Player)
+        assert isinstance(my_save_data.players[12345678901234567], PlayerData)

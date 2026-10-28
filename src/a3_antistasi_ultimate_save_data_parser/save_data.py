@@ -8,7 +8,7 @@ import msgspec
 
 from ._types import SteamId64
 from .params import Params
-from .player import Player
+from .player_data import PlayerData
 from .position import Position
 
 if TYPE_CHECKING:
@@ -35,8 +35,8 @@ class SaveData(msgspec.Struct, kw_only=True):
     """`list` of `SteamId64`s."""
     savedPlayers: list[SteamId64]
     """`list` of `SteamId64`s."""
-    players: dict[SteamId64, Player] = {}
-    """`dict` mapping `SteamId64` to `.player.Player` instances."""
+    players: dict[SteamId64, PlayerData] = {}
+    """`dict` mapping `SteamId64` to `.player.PlayerData` instances."""
 
     # World:
     map: str
@@ -129,7 +129,7 @@ class SaveData(msgspec.Struct, kw_only=True):
         _pkg_version = importlib.metadata.version(
             "a3_antistasi_ultimate_save_data_parser"
         )
-        _player_dict = Player._dict_from_raw_dict(raw)  # noqa: SLF001
+        _player_dict = PlayerData._dict_from_raw_dict(raw)  # noqa: SLF001
         additional_fields = {
             "__a3_antistasi_ultimate_save_data_parser_version__": _pkg_version,
             "players": _player_dict,
