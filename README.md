@@ -15,7 +15,7 @@ Experimental/alpha.
 
 * SteamId64s are converted to int
 
-* players' data is parsed to `SaveData.players`, a mapping of SteamId64: `Player` class
+* players' data is parsed to `SaveData.players`, a mapping of SteamId64: `PlayerData` class
 
 
 ## Installing
@@ -88,7 +88,7 @@ SaveData(
     membersX=[12345678901234567],
     savedPlayers=[12345678901234567],
     players={
-        12345678901234567: Player(
+        12345678901234567: PlayerData(
             scorePlayer=462,
             loadoutPlayer=[
             ..
