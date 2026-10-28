@@ -54,7 +54,7 @@ extend-safe-fixes = [
 runtime-evaluated-base-classes = ["msgspec.Struct"]
 
 [tool.ruff.lint.per-file-ignores]
-"src/a3_antistasi_ultimate_save_data_parser/model/*.py" = [
+"src/a3_antistasi_ultimate_save_data_parser/*.py" = [
     "N802",  # invalid-function-name: keep refs to member names formatted as source
     "N815",  # mixed-case-variable-in-class-scope: ditto
 ]

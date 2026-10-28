@@ -1,8 +1,9 @@
 # A3-Antistasi-Ultimate-save-data-parser
 
-Proof-of-concept to parse [Antistasi Ultimate ('AU')](https://antistasiultimate.com/) save data
-that's been exported from the game as JSON
-(this feature is currently only implemented in AU public test versions).
+Python library to parse [Antistasi Ultimate ('AU')](https://antistasiultimate.com/) save data
+that's been exported from the game as JSON. This feature was added in AU v12.2.0 (public testing only as of 2026-10-28).
+
+Experimental.
 
 * Outputs Python [msgspec.Struct](https://msgspec.dev/) classes
 
@@ -17,22 +18,49 @@ that's been exported from the game as JSON
 * players' data is parsed to `SaveData.players`, a mapping of SteamId64: `Player` class
 
 
-## Usage
+## Installing
 
-These instructions assume you have [uv](http://docs.astral.sh/uv/) installed.
-
-* Clone/download this repo and `cd` into it.
-
-* Run the demo script which parses a sample save data file
-  (currently a composite of multiple real savegames to get a spread of test data,
-  so won't make sense as a whole) 
+From GitHub, specifying a version via tag, e.g:
 
 ```shell
-uv run -m a3_antistasi_ultimate_save_data_parser.main
+uv add git+https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser --tag v0.0.4
+```
+
+or with `pip`:
+
+```shell
+pip install git+https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser@v0.0.4
+```
+
+
+## Example code
+
+Requires `rich` for formatting output.
+
+```
+from pathlib import Path
+from rich import print as rprint
+
+import msgspec
+
+from a3_antistasi_ultimate_save_data_parser.save_data import SaveData
+
+BASE_PATH = Path(__file__).parent
+
+
+with (BASE_PATH / "sample.json").open() as file:
+save_data_obj = SaveData.decode_str(file.read())
+
+print("\nSOURCE JSON -> SAVEDATA OBJECT")
+rprint(save_data_obj)
+print("\nSAVEDATA OBJECT -> JSON")
+rprint(msgspec.json.encode(save_data_obj))
 ```
 
 This should display a representation of a `SaveData` object like:
+
 ```pycon
+SOURCE JSON -> SAVEDATA OBJECT
 SaveData(
     a3_antistasi_ultimate_save_data_parser_version='0.0.4',
     name='RHS PKL Unsung 1 test',
@@ -73,8 +101,15 @@ SaveData(
     },
     ...
 )
+
+SAVEDATA OBJECT -> JSON
+b'{"a3_antistasi_ultimate_save_data_parser_version":"0.0.4","name":"RHS PKL Unsung 1 
+test","saveTime":"2026-10-22T14:20:40.383000Z","map":"rhspkl","serverID":false,"campaignID":"10ba0f24-f1cd-4e5b-a2f2-9f6822a393a8","version":"12.2.0.0","params":{"A3A_attackHQProximityMul":3,"A3A_builderAllowRoads":false,"A3A_builderBuildTime":5,"A3A_builderLimit":
+300,"A3A_builderPermissions":3,"A3A_diameterExtendedCaptureArea":0,"A3A_enemyAttackMul":10,"A3A_enemyBalanceMul":11,"A3A_enemyResponseTime":10,"A3A_enemySkillMul":2,"A3A_flagGarageBlock":0,"A3A_GCThreshold":-1,"A3A_guestCommander":true,"A3A_guestItemLimit":25,"A3A_
+idleTimeout":300,"A3A_invaderBalanceMul":12,"A3A_isUAVAFK":true,"A3A_isZeusAFK":true,"A3A_logDebugConsole":1,"A3A_rebelGarrisonGroupSize":8,"A3A_rebelGarrisonLimit":24,"A3A_rebelSkillMul":2,"A3A_removeRestore":false,"A3A_reviveTime":16,"A3A_roadBlocksBaseChance":0,
+...
 ``` 
-then the result of encoding the `SaveData` object to JSON (which won't match the original JSON).
+Note that the output JSON won't match the source JSON.
 
 ## Development
 

@@ -5,10 +5,10 @@ from typing import TYPE_CHECKING
 import msgspec
 import pytest
 
-from a3_antistasi_ultimate_save_data_parser.model.params import Params
+from a3_antistasi_ultimate_save_data_parser.params import Params
 
 if TYPE_CHECKING:
-    from a3_antistasi_ultimate_save_data_parser.model._types import JSONDictNode
+    from a3_antistasi_ultimate_save_data_parser._types import JSONDictNode
 
 
 class TestParams:

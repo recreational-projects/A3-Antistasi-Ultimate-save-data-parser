@@ -1,1 +1,1 @@
-"""Top-level package."""
+"""The top-level package."""
