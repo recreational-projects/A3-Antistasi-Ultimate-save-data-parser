@@ -3,6 +3,9 @@ name = "a3-antistasi-ultimate-save-data-parser"
 version = "0.1.0"
 description = "Parse Antistasi Ultimate JSON save data"
 readme = "README.md"
+authors = [
+    { name = "recreational-projects", email = "205627218+recreational-projects@users.noreply.github.com" }
+]
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.14"
