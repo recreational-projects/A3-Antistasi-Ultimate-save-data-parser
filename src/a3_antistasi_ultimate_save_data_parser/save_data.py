@@ -125,7 +125,7 @@ class SaveData(msgspec.Struct, kw_only=True):
         raw["dateX"] = _convert_dateX(raw["dateX"])
         raw["membersX"] = _convert_iterable_str_to_int(raw["membersX"])
         raw["savedPlayers"] = _convert_iterable_str_to_int(raw["savedPlayers"])
-        raw["players"] = Player.dict_from_raw_dict(raw)
+        raw["players"] = Player._dict_from_raw_dict(raw)  # noqa: SLF001
         raw["a3_antistasi_ultimate_save_data_parser_version"] = (
             importlib.metadata.version("a3_antistasi_ultimate_save_data_parser")
         )

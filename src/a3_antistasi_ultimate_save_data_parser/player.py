@@ -23,7 +23,7 @@ class Player(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     rankPlayer: str
 
     @classmethod
-    def dict_from_raw_dict(cls, raw_dict: dict[str, Any]) -> dict[SteamId64, Self]:
+    def _dict_from_raw_dict(cls, raw_dict: dict[str, Any]) -> dict[SteamId64, Self]:
         """Derive `dict` of `STEAM_ID`: `Player()`.
 
         from e.g. the initial conversion of savedata to Python builtins,
