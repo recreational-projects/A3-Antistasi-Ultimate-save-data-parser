@@ -11,21 +11,21 @@ if TYPE_CHECKING:
 class TestPlayer:
     """Tests for `PlayerData` class."""
 
-    def test_from_raw_dict(self, sample_dict: JSONDictNode) -> None:
+    def test_from_raw_dict(self, base_sample_dict: JSONDictNode) -> None:
         """Test that `PlayerData` can be created from root of sample `dict`."""
         # arrange
         # act
         my_player = PlayerData._from_raw_dict(
-            raw_dict=sample_dict, steam_id=12345678901234567
+            raw_dict=base_sample_dict, steam_id=12345678901234567
         )
         # assert
         assert isinstance(my_player, PlayerData)
 
-    def test_dict_from_raw_dict(self, sample_dict: JSONDictNode) -> None:
+    def test_dict_from_raw_dict(self, base_sample_dict: JSONDictNode) -> None:
         """Test that `PlayerData` dict can be created from root of sample `dict`."""
         # arrange
         # act
-        my_player_dict = PlayerData._dict_from_raw_dict(sample_dict)
+        my_player_dict = PlayerData._dict_from_raw_dict(base_sample_dict)
         # assert
         assert my_player_dict.keys() == {12345678901234567}
         assert isinstance(my_player_dict[12345678901234567], PlayerData)

@@ -4,7 +4,7 @@
     "12345678901234567"
   ],
   "HQKnowledge": [
-    0.205547,
+    0,
     0,
     [],
     []
@@ -23,26 +23,24 @@
     "control_46",
     "control_48"
   ],
-  "map": "rhspkl",
+  "map": "Altis",
   "savedPlayers": [
     "12345678901234567"
   ],
   "mrkCSAT": [
-    "resource_2"
+    "airport_2",
+    "milbase_4",
+    "factory_5",
+    "factory_7",
+    "outpost_24",
+    "outpost_5",
+    "outpost_6",
+    "seaport_4"
   ],
   "destroyedSites": [],
   "aggressionOccupants": [
     1,
-    [
-      [
-        19.2,
-        -0.2
-      ],
-      [
-        -4.25,
-        0.25
-      ]
-    ]
+    []
   ],
   "isTraderQuestCompleted": false,
   "randomizeRebelLoadoutUniforms": true,

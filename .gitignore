@@ -11,3 +11,6 @@ wheels/
 
 # Pycharm
 .idea
+
+# Project specific
+.sample_data
