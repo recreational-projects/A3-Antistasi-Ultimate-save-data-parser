@@ -1,14 +1,13 @@
 [project]
 name = "a3-antistasi-ultimate-save-data-parser"
-version = "0.0.4"
-description = "Add your description here"
+version = "0.1.0"
+description = "Parse Antistasi Ultimate JSON save data"
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.14"
 dependencies = [
     "msgspec>=0.22.0",
-    "rich>=15.0.0",
 ]
 
 [project.scripts]
