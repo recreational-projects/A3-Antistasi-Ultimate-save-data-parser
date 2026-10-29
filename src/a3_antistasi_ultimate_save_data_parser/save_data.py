@@ -2,7 +2,7 @@
 
 import datetime as dt
 import importlib.metadata
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 import msgspec
 
@@ -17,6 +17,12 @@ if TYPE_CHECKING:
 
 class SaveData(msgspec.Struct, kw_only=True):
     """Provides an interface for Antistasi Ultimate JSON save data."""
+
+    DERIVED_FIELDS: ClassVar[set[str]] = {
+        "__a3_antistasi_ultimate_save_data_parser_version__",
+        "players",
+    }
+    """Fields that are derived during parsing, so will never be in input."""
 
     __a3_antistasi_ultimate_save_data_parser_version__: str
     """@public The version of this library used to parse the JSON data."""

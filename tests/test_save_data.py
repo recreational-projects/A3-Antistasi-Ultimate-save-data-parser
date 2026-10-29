@@ -3,7 +3,7 @@
 import datetime as dt
 import json
 from pathlib import Path
-from typing import TYPE_CHECKING, ClassVar
+from typing import TYPE_CHECKING
 
 import msgspec
 import pytest
@@ -25,11 +25,6 @@ _PACKAGE_MINOR_VERSION = "0.2.x"
 class TestSaveData:
     """Tests for `SaveData` class."""
 
-    DERIVED_FIELDS: ClassVar[set[str]] = {
-        "__a3_antistasi_ultimate_save_data_parser_version__",
-        "players",
-    }
-
     def test_base_sample_data_contains_all_members(
         self,
         base_sample_dict: JSONDictNode,
@@ -39,11 +34,13 @@ class TestSaveData:
         Does not recurse.
         """
         # arrange
-        sample_data_keys = set(base_sample_dict.keys())
+        sample_data_root_keys = set(base_sample_dict.keys())
         save_data_field_names = {f.name for f in msgspec.structs.fields(SaveData)}
         # act
         # assert
-        assert sample_data_keys.issuperset(save_data_field_names - self.DERIVED_FIELDS)
+        assert sample_data_root_keys.issuperset(
+            save_data_field_names - SaveData.DERIVED_FIELDS
+        )
 
     def test_decode_base_sample_str(self, base_sample_str: str) -> None:
         """Test `SaveData.decode_str`."""
