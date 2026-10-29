@@ -13,9 +13,6 @@ dependencies = [
     "msgspec>=0.22.0",
 ]
 
-[project.scripts]
-a3-antistasi-ultimate-savedata-parser = "a3_antistasi_ultimate_save_data_parser:main"
-
 [project.urls]
 Documentation = "https://recreational-projects.github.io/A3-Antistasi-Ultimate-save-data-parser/"
 Repository = "https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser"
