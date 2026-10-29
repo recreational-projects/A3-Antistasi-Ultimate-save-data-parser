@@ -55,11 +55,11 @@ class TestSaveData:
             == _pkg_minor_version
         )
         assert sd.aggressionOccupants == [1, []]
-        assert sd.A3A_fuelAmountleftArray == []
+        assert _is_list_of_list(sd.A3A_fuelAmountleftArray)
         assert sd.saveTime == dt.datetime(
-            2026, 10, 22, 14, 20, 40, 383000, tzinfo=dt.UTC
+            2026, 10, 28, 17, 31, 34, 905000, tzinfo=dt.UTC
         )
-        assert sd.dateX == dt.datetime(2035, 6, 11, 18, 43, tzinfo=None)
+        assert sd.dateX == dt.datetime(2035, 6, 10, 10, 26, tzinfo=None)
         assert isinstance(sd.savedPlayers[0], int)
         assert isinstance(sd.membersX[0], int)
         assert isinstance(sd.players[12345678901234567], PlayerData)
