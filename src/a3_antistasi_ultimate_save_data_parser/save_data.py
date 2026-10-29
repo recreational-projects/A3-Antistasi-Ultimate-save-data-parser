@@ -28,7 +28,7 @@ class SaveData(msgspec.Struct, kw_only=True):
     """@public The version of this library used to parse the JSON data."""
 
     # Key metadata:
-    name: str
+    name: str  # including empty ""
     saveTime: dt.datetime
     """UTC timestamp of the save."""
     serverID: bool
@@ -45,7 +45,7 @@ class SaveData(msgspec.Struct, kw_only=True):
     """`dict` mapping `SteamId64` to `.player.PlayerData` instances."""
 
     # World:
-    map: str
+    map: str  # e.g. "Altis"
     dateX: dt.datetime
     """Geographic time within the mission; no timezone."""
     weather: list[object]
@@ -56,25 +56,25 @@ class SaveData(msgspec.Struct, kw_only=True):
     skillFIA: int
     randomizeRebelLoadoutUniforms: bool
     petrosPosition: Position
-    unlockedVehicleTypes: list[str]
+    unlockedVehicleTypes: list[str]  # e.g. ["Unarmed Cars", "Armed Cars"]
     posHQ: list[object]
-    watchpostsFIA: list[tuple[Position, list[str]]]
-    roadblocksFIA: list[tuple[Position, list[str]]]
-    hmgpostsFIA: list[tuple[Position, list[str]]]
-    atpostsFIA: list[tuple[Position, list[str]]]
-    aapostsFIA: list[tuple[Position, list[str]]]
-    constructionsX: list[Position]
-    rebelLoadouts: dict[str, object]
+    watchpostsFIA: list[tuple[Position, list[str]]]  # including empty []
+    roadblocksFIA: list[tuple[Position, list[str]]]  # including empty []
+    hmgpostsFIA: list[tuple[Position, list[str]]]  # including empty []
+    atpostsFIA: list[tuple[Position, list[str]]]  # including empty []
+    aapostsFIA: list[tuple[Position, list[str]]]  # including empty []
+    constructionsX: list[Position]  # including empty []
+    rebelLoadouts: dict[str, object]  # including empty {}
 
     # Rival faction:
     isRivalsDiscoveryQuestAssigned: bool
     areRivalsDiscovered: bool
     areRivalsDefeated: bool
-    rivalsLocationsMap: dict[str, bool]
-    rivalsExcludedLocations: dict[str, object]
+    rivalsLocationsMap: dict[str, bool]  # Town names
+    rivalsExcludedLocations: dict[str, object]  # including empty {}
     nextRivalsLocationReveal: float
-    mrkSDK: list[str]
-    controlsSDK: list[str]
+    mrkSDK: list[str]  # marker names inc. "SyndHQ"
+    controlsSDK: list[str]  # marker names
     inactivityRivals: tuple[int, list[list[float]]]
 
     # Occupants and Invaders:
@@ -82,10 +82,10 @@ class SaveData(msgspec.Struct, kw_only=True):
     areInvadersDefeated: bool
     occupantsRadioKeys: int
     invaderRadioKeys: int
-    aggressionOccupants: list[object]
+    aggressionOccupants: list[object]  # observed patterns:  [1,[]]
     enemyResources: tuple[float, float, float, float]
-    mrkCSAT: list[str]
-    prestigeOPFOR: list[float]
+    mrkCSAT: list[str]  # marker names
+    prestigeOPFOR: list[float]  # variable length
 
     # Trader:
     isTraderQuestCompleted: bool
@@ -94,18 +94,21 @@ class SaveData(msgspec.Struct, kw_only=True):
 
     # Other / TODO:
     DLC: list[int] = []
-    HQKnowledge: list[object]
+    HQKnowledge: list[object]  # observed pattern: [float, float, [], []]
     A3A_fuelAmountleftArray: list[object]
+    # observed patterns:
+    # []
+    # [[Position], 1 ...]
     tasks: list[object]
     bombRuns: int
     wurzelGarrison: list[list[str | list[object]]]
     supportPoints: int
-    antennas: list[Position]
+    antennas: list[Position]  # including empty []
     killZones: list[list[str | list[object]]]
     gameMode: int
     minesX: list[list[object]]
-    destroyedBuildings: list[Position]
-    destroyedMilAdmins: list[Position]
+    destroyedBuildings: list[Position]  # including empty []
+    destroyedMilAdmins: list[Position]  # including empty []
     destroyedSites: list[Position]
     distanceSPWN: int
     chopForest: bool
