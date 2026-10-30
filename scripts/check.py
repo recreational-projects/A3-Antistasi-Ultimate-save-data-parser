@@ -107,7 +107,7 @@ def _get_struct_field_names(struct_cls: type[msgspec.Struct]) -> set[str]:
     return {field.name for field in msgspec.structs.fields(struct_cls)}
 
 
-def _print_iterable(iterable: Iterable) -> None:
+def _print_iterable(iterable: Iterable[str]) -> None:
     pprint(sorted(iterable))
 
 

@@ -1,21 +1,16 @@
 # A3-Antistasi-Ultimate-save-data-parser
 
 Python library to parse [Antistasi Ultimate ('AU')](https://antistasiultimate.com/) save data that's been exported from the game as JSON.
-This feature was added in AU v12.2.0 (public testing only as of 2026-10-28).
+This feature was added in AU v12.2.0 (public testing only as of 2026-10-30).
 
 Experimental/alpha. Only tested with output from AU v12.3.0.0.
 
-* Outputs Python [msgspec.Struct](https://msgspec.dev/) classes
-
-* Datetime fields are parsed as Python `datetime.datetime` built-in objects
-
-* Position fields are parsed as a `Position` class with `x`, `y`, `z` fields
-
+* Outputs Python [`msgspec.Struct`](https://msgspec.dev/) classes
+* Datetime values are parsed as Python `datetime.datetime` built-in objects
+* Position values are parsed as a `Position` class with `x`, `y`, `z` fields, where possible
 * `params` is parsed as a `Params` class
-
-* SteamId64s are converted to int
-
-* players' data is parsed to `SaveData.players`, a mapping of SteamId64: `PlayerData` class
+* SteamId64s are converted to `int`
+* players' data is parsed to `SaveData.players`, a `dict` mapping SteamId64: `PlayerData` class
 
 
 ## Installing
@@ -35,9 +30,9 @@ pip install git+https://github.com/recreational-projects/A3-Antistasi-Ultimate-s
 
 ## Example code
 
-Requires `rich` for formatting output.
+Requires [`rich`](https://rich.readthedocs.io/) for formatting output.
 
-```
+```python
 from pathlib import Path
 from rich import print as rprint
 
@@ -49,7 +44,7 @@ BASE_PATH = Path(__file__).parent
 
 
 with (BASE_PATH / "sample.json").open() as file:
-save_data_obj = SaveData.decode_str(file.read())
+    save_data_obj = SaveData.decode_str(file.read())
 
 print("\nSOURCE JSON -> SAVEDATA OBJECT")
 rprint(save_data_obj)
@@ -59,7 +54,7 @@ rprint(msgspec.json.encode(save_data_obj))
 
 This should display a representation of a `SaveData` object like:
 
-```pycon
+```shell
 SOURCE JSON -> SAVEDATA OBJECT
 SaveData(
     a3_antistasi_ultimate_save_data_parser_version='0.4.0',
@@ -101,7 +96,11 @@ SaveData(
     },
     ...
 )
+```
 
+Then a recoding to JSON like:
+
+```shell
 SAVEDATA OBJECT -> JSON
 b'{"a3_antistasi_ultimate_save_data_parser_version":"0.0.4","name":"RHS PKL Unsung 1 
 test","saveTime":"2026-10-22T14:20:40.383000Z","map":"rhspkl","serverID":false,"campaignID":"10ba0f24-f1cd-4e5b-a2f2-9f6822a393a8","version":"12.2.0.0","params":{"A3A_attackHQProximityMul":3,"A3A_builderAllowRoads":false,"A3A_builderBuildTime":5,"A3A_builderLimit":
@@ -109,7 +108,8 @@ test","saveTime":"2026-10-22T14:20:40.383000Z","map":"rhspkl","serverID":false,"
 idleTimeout":300,"A3A_invaderBalanceMul":12,"A3A_isUAVAFK":true,"A3A_isZeusAFK":true,"A3A_logDebugConsole":1,"A3A_rebelGarrisonGroupSize":8,"A3A_rebelGarrisonLimit":24,"A3A_rebelSkillMul":2,"A3A_removeRestore":false,"A3A_reviveTime":16,"A3A_roadBlocksBaseChance":0,
 ...
 ``` 
-Note that the output JSON won't match the source JSON.
+Note that output JSON won't match source JSON, as the point of the library is to add structure/context to the data;
+there isn't an obvious need to then feed it back into the game.
 
 ## License
 
@@ -123,7 +123,7 @@ Run tests:
 uv run pytest
 ```
 
-Serve docs locally:
+Serve docs locally with live updating:
 ```shell
 uv run pdoc a3_antistasi_ultimate_save_data_parser
 ```
