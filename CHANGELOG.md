@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project tries to adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.4.0] - 2026-10-30
+
+### Added
+
+* `SaveData.A3A_fuelAmountleftArray`: positions are parsed to `Position`s
+
+### Fixed
+
+* `SaveData` failed to parse if `serverID` was a string. Now parsed to `str` or `Literal[False]`
+
+
 ## [0.3.0] - 2026-10-29
 
 ### Added
@@ -52,6 +63,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 Initial documented version
 
 
+[0.4.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.3.0..v0.4.0
 [0.3.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.2.0..v0.3.0
 [0.2.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.1.0..v0.2.0
 [0.1.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/releases/tag/v0.1.0

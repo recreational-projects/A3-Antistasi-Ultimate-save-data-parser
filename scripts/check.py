@@ -1,11 +1,13 @@
-"""Run with: `uv run scripts/check.py`.
+"""Run with e.g.:
+```
+uv run scripts/check.py tests/base_sample.json
+```
 
 Uses the editable version of the package so that dev changes are reflected.
-"""
+"""  # noqa: D205, D400, D415
 # /// script
 # dependencies = [
 #     "a3-antistasi-ultimate-save-data-parser",
-#     "msgspec>=0.22.0",
 #     "rich>=15.0.0",
 # ]
 # [tool.uv.sources]
