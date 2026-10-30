@@ -55,7 +55,7 @@ class TestSaveData:
             == _pkg_minor_version
         )
         assert sd.aggressionOccupants == [1, []]
-        assert _is_list_of_list(sd.A3A_fuelAmountleftArray)
+        assert _A3A_fuelAmountleftArray_conforms_to_type(sd.A3A_fuelAmountleftArray)
         assert sd.saveTime == dt.datetime(
             2026, 10, 28, 17, 31, 34, 905000, tzinfo=dt.UTC
         )
@@ -82,11 +82,19 @@ class TestSaveData:
         # assert
         assert isinstance(sd, SaveData)
         assert sd.aggressionOccupants == [1, [[19.2, -0.2], [-4.25, 0.25]]]
-        assert _is_list_of_list(sd.A3A_fuelAmountleftArray)
+        assert _A3A_fuelAmountleftArray_conforms_to_type(sd.A3A_fuelAmountleftArray)
         assert isinstance(sd.traderPosition, Position)
         assert isinstance(sd.params, Params)
 
 
-def _is_list_of_list(obj: object) -> bool:
-    """Return True if `obj` is a list of lists."""
-    return isinstance(obj, list) and all(isinstance(item, list) for item in obj)
+def _A3A_fuelAmountleftArray_conforms_to_type(
+    value: list[tuple[Position, float]],
+) -> bool:
+    return all(
+        (
+            isinstance(value, list),
+            all(isinstance(item, tuple) for item in value),
+            all(isinstance(item[0], Position) for item in value),
+            all(isinstance(item[1], float) for item in value),
+        )
+    )
