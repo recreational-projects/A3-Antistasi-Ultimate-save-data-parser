@@ -63,6 +63,7 @@ runtime-evaluated-base-classes = ["msgspec.Struct"]
 [tool.ruff.lint.per-file-ignores]
 "src/a3_antistasi_ultimate_save_data_parser/*.py" = [
     "N815",  # mixed-case-variable-in-class-scope: keep refs to member names formatted as source
+    "SLF001",  # private-member-access
 ]
 "tests/*" = [
     "ANN401",  # any-type
