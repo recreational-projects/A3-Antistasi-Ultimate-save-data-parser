@@ -2,7 +2,7 @@
 
 import datetime as dt
 import importlib.metadata
-from typing import TYPE_CHECKING, ClassVar
+from typing import TYPE_CHECKING, ClassVar, Literal
 
 import msgspec
 
@@ -31,7 +31,7 @@ class SaveData(msgspec.Struct, kw_only=True):
     name: str  # including empty ""
     saveTime: dt.datetime
     """UTC timestamp of the save."""
-    serverID: bool
+    serverID: str | Literal[False]
     campaignID: str
     version: str
     params: Params
