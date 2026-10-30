@@ -2,9 +2,12 @@
 
 import datetime as dt
 import importlib.metadata
+from collections.abc import Sequence
 from typing import TYPE_CHECKING, ClassVar, Literal
 
 import msgspec
+
+from a3_antistasi_ultimate_save_data_parser.position import Position2D
 
 from ._types import SteamId64
 from .params import Params
@@ -12,9 +15,12 @@ from .player_data import PlayerData
 from .position import Position
 
 if TYPE_CHECKING:
-    from collections.abc import Collection, Iterable
+    from collections.abc import Iterable
 
 _PACKAGE_VERSION = importlib.metadata.version("a3_antistasi_ultimate_save_data_parser")
+
+
+type _RawPosition = Sequence[float]
 
 
 class SaveData(msgspec.Struct, kw_only=True):
@@ -22,6 +28,8 @@ class SaveData(msgspec.Struct, kw_only=True):
 
     All field names correspond to source JSON keys (unless noted),
     so don't conform to conventional Python 'PEP8' naming patterns.
+
+    Descriptors: https://github.com/Antistasi-Ultimate-Community/A3-Antistasi-Ultimate/blob/unstable/A3A/addons/core/functions/init/fn_initServer.sqf
     """
 
     __DERIVED_FIELDS__: ClassVar[set[str]] = {
@@ -70,6 +78,9 @@ class SaveData(msgspec.Struct, kw_only=True):
     petrosPosition: Position
     unlockedVehicleTypes: list[str]  # e.g. ["Unarmed Cars", "Armed Cars"]
     posHQ: list[object]
+    # msgspec doesn't allow more complex type union expressions
+    # e.g. can't use more than one array-like, such as _RawPosition/list/tuple
+    # this forces parsing to positions later
     watchpostsFIA: list[tuple[Position, list[str]]]  # including empty []
     roadblocksFIA: list[tuple[Position, list[str]]]  # including empty []
     hmgpostsFIA: list[tuple[Position, list[str]]]  # including empty []
@@ -101,7 +112,7 @@ class SaveData(msgspec.Struct, kw_only=True):
 
     # Trader:
     isTraderQuestCompleted: bool
-    traderPosition: Position | None
+    traderPosition: Position2D | None
     traderDiscount: int
 
     # Other / TODO:
@@ -140,31 +151,20 @@ class SaveData(msgspec.Struct, kw_only=True):
     def decode_str(cls, json_str: str) -> SaveData:
         """Decode a JSON string into a `SaveData` instance."""
         raw = msgspec.json.decode(json_str)  # naive conversion to Python builtins
-
-        # Conversions to other builtin forms:
-        saveTime = _convert_saveTime(raw["saveTime"])
-        dateX = _convert_dateX(raw["dateX"])
-        membersX = _convert_iterable_str_to_int(raw["membersX"])
-        savedPlayers = _convert_iterable_str_to_int(raw["savedPlayers"])
-        traderPosition = _convert_traderPosition(raw["traderPosition"])
-
-        # Additional/derived fields:
-        players_dict = PlayerData._dict_from_raw_dict(raw)  # noqa: SLF001
-        params = Params._from_dict(raw["params"])  # noqa: SLF001
-        return msgspec.convert(
+        raw.update(
             {
-                **raw,
                 "__a3_antistasi_ultimate_save_data_parser_version__": _PACKAGE_VERSION,
-                "saveTime": saveTime,
-                "dateX": dateX,
-                "membersX": membersX,
-                "savedPlayers": savedPlayers,
-                "traderPosition": traderPosition,
-                "players": players_dict,
-                "params": params,
+                "saveTime": _convert_saveTime(raw["saveTime"]),
+                "dateX": _convert_dateX(raw["dateX"]),
+                "membersX": _convert_iterable_str_to_int(raw["membersX"]),
+                "savedPlayers": _convert_iterable_str_to_int(raw["savedPlayers"]),
+                "traderPosition": _convert_traderPosition(raw["traderPosition"]),
+                "posHQ": _convert_posHQ(raw["posHQ"]),
+                "players": PlayerData._dict_from_raw_dict(raw),
+                "params": Params._from_dict(raw["params"]),
             },
-            type=cls,
         )
+        return msgspec.convert(raw, type=cls)  # this does re-validate some data
 
 
 def _convert_saveTime(
@@ -181,13 +181,63 @@ def _convert_dateX(value: tuple[int, int, int, int, int]) -> dt.datetime:
     return dt.datetime(y, m, d, h, mn, tzinfo=None)
 
 
-def _convert_traderPosition(value: Collection[float]) -> Position | None:
+def _convert_traderPosition(value: Sequence[float]) -> Position2D | None:
     if not value:
         return None
 
-    return Position(*value)
+    if _is_raw_position2D(value):
+        return Position2D._from_raw_position_array(value)
+
+    err_msg = (
+        f"Can't convert `traderPosition` value: "
+        f"'{value}' of type '{type(value)}'. "
+        f"Expected `{_RawPosition}`."
+    )
+    raise TypeError(err_msg)
+
+
+def _convert_posHQ(
+    value: Iterable[tuple],
+) -> tuple[tuple[object, Position] | Position, ...]:
+    output = ()
+    for item in value:
+        if _is_raw_position(item):
+            output += (Position._from_raw_position_array(item),)
+
+        elif (
+            isinstance(item, Sequence)
+            and isinstance(item[0], float)
+            and _is_raw_position(item[1])
+        ):
+            output += (((item[0]), Position._from_raw_position_array(item[1])),)
+
+        else:
+            err_msg = (
+                f"Can't convert `posHQ` array item: "
+                f"'{item}' of type '{type(item)}'. "
+                f"Expected `{_RawPosition}` or `tuple[float, _RawPosition]`."
+            )
+            raise TypeError(err_msg)
+
+    return output
 
 
 def _convert_iterable_str_to_int(value: Iterable[str]) -> list[int]:
     """Convert an iterable of `str`s to list of `int`s`."""
     return [int(x) for x in value]
+
+
+def _is_raw_position(value: object) -> bool:
+    return (
+        isinstance(value, Sequence)
+        and len(value) == 3  # noqa: PLR2004
+        and all(isinstance(x, float | int) for x in value)
+    )
+
+
+def _is_raw_position2D(value: object) -> bool:
+    return (
+        isinstance(value, Sequence)
+        and len(value) == 2  # noqa: PLR2004
+        and all(isinstance(x, float | int) for x in value)
+    )
