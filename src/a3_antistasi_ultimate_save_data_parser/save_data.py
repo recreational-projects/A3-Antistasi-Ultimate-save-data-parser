@@ -16,7 +16,11 @@ if TYPE_CHECKING:
 
 
 class SaveData(msgspec.Struct, kw_only=True):
-    """Provides an interface for Antistasi Ultimate JSON save data."""
+    """Provides an interface for Antistasi Ultimate JSON save data.
+
+    All field names correspond to source JSON keys (unless noted),
+    so don't conform to conventional Python 'PEP8' naming patterns.
+    """
 
     DERIVED_FIELDS: ClassVar[set[str]] = {
         "__a3_antistasi_ultimate_save_data_parser_version__",
@@ -42,12 +46,15 @@ class SaveData(msgspec.Struct, kw_only=True):
     savedPlayers: list[SteamId64]
     """`list` of `SteamId64`s."""
     players: dict[SteamId64, PlayerData] = {}
-    """`dict` mapping `SteamId64` to `.player.PlayerData` instances."""
+    """`dict` mapping `SteamId64` to `.player.PlayerData` instances.
+
+    Does not correspond directly to a key in source JSON.
+    """
 
     # World:
     map: str  # e.g. "Altis"
     dateX: dt.datetime
-    """Geographic time within the mission; no timezone."""
+    """Geographic time within the mission with minutes precision. No timezone."""
     weather: list[object]
 
     # Rebel faction:
@@ -129,7 +136,7 @@ class SaveData(msgspec.Struct, kw_only=True):
         """Decode a JSON string into a `SaveData` instance."""
         raw = msgspec.json.decode(json_str)  # naive conversion to Python builtins
 
-        # in-place conversions to builtins / external types:
+        # in-place conversions to builtins:
         raw["saveTime"] = _convert_saveTime(raw["saveTime"])
         raw["dateX"] = _convert_dateX(raw["dateX"])
         raw["membersX"] = _convert_iterable_str_to_int(raw["membersX"])

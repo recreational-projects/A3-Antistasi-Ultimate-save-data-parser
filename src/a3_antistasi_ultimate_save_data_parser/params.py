@@ -4,7 +4,11 @@ import msgspec
 
 
 class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
-    """Mission parameters."""
+    """Mission parameters.
+
+    All field names correspond to source JSON keys (unless noted),
+    so don't conform to conventional Python 'PEP8' naming patterns.
+    """
 
     # AllParams
 
