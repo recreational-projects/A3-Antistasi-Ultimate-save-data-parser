@@ -102,10 +102,10 @@ class SaveData(msgspec.Struct, kw_only=True):
     # Other / TODO:
     DLC: list[int] = []
     HQKnowledge: list[object]  # observed pattern: [float, float, [], []]
-    A3A_fuelAmountleftArray: list[object]
+    A3A_fuelAmountleftArray: list[tuple[Position, float]]
     # observed patterns:
     # []
-    # [[Position], 1 ...]
+    # [[Position, 1] ...]
     tasks: list[object]
     bombRuns: int
     wurzelGarrison: list[list[str | list[object]]]
