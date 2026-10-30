@@ -13,7 +13,11 @@ _SOURCE_PLAYER_FIELDS_PREFIX = "player_"
 
 
 class PlayerData(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
-    """Data for a player."""
+    """Data for a player.
+
+    All field names correspond to source JSON keys,
+    so don't conform to conventional Python 'PEP8' naming patterns.
+    """
 
     scorePlayer: int
     loadoutPlayer: list[object]
