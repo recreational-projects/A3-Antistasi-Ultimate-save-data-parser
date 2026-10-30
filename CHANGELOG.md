@@ -11,10 +11,12 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 ### Added
 
 * `SaveData.A3A_fuelAmountleftArray`: positions are parsed to `Position`s
+* docs: improved documentation
 
 ### Fixed
 
 * `SaveData` failed to parse if `serverID` was a string. Now parsed to `str` or `Literal[False]`
+* docs: indentation error in `README.md` sample code
 
 
 ## [0.3.0] - 2026-10-29
