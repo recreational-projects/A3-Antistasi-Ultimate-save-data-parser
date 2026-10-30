@@ -23,13 +23,13 @@ Experimental/alpha. Only tested with output from AU v12.3.0.0.
 From GitHub, specifying a version via tag, e.g:
 
 ```shell
-uv add git+https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser --tag v0.3.0
+uv add git+https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser --tag v0.4.0
 ```
 
 or with `pip`:
 
 ```shell
-pip install git+https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser@v0.3.0
+pip install git+https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser@v0.4.0
 ```
 
 
@@ -62,13 +62,13 @@ This should display a representation of a `SaveData` object like:
 ```pycon
 SOURCE JSON -> SAVEDATA OBJECT
 SaveData(
-    a3_antistasi_ultimate_save_data_parser_version='0.0.4',
+    a3_antistasi_ultimate_save_data_parser_version='0.4.0',
     name='RHS PKL Unsung 1 test',
     saveTime=datetime.datetime(2026, 10, 22, 14, 20, 40, 383000, tzinfo=datetime.timezone.utc),
     map='rhspkl',
     serverID=False,
     campaignID='10ba0f24-f1cd-4e5b-a2f2-9f6822a393a8',
-    version='12.2.0.0',
+    version='12.3.0.0',
     params=Params(
         A3A_attackHQProximityMul=3,
         A3A_builderAllowRoads=False,

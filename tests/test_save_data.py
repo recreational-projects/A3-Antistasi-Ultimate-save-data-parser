@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 
 _JSON_OVERRIDES_PATH = Path(__file__).parent / "overrides.json"
 """NB: this is a composite sample and won't be internally consistent."""
-_PACKAGE_MINOR_VERSION = "0.3.x"
+_PACKAGE_MINOR_VERSION = "0.4.x"
 
 
 class TestSaveData:
