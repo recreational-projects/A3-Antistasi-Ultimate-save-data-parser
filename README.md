@@ -8,7 +8,7 @@ Experimental/alpha. Only tested with output from AU v12.3.0.0.
 * Outputs Python [`msgspec.Struct`](https://msgspec.dev/) classes
 * Datetime values are parsed as Python `datetime.datetime` built-in objects
 * Position values are parsed as a `Position` class with `x`, `y`, `z` fields, where possible
-* `params` is parsed as a `Params` class
+* `params` is parsed as a hierarchical `Params` class
 * SteamId64s are converted to `int`
 * players' data is parsed to `SaveData.players`, a `dict` mapping SteamId64: `PlayerData` class
 

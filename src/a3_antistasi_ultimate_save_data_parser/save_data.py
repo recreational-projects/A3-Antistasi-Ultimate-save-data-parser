@@ -14,6 +14,8 @@ from .position import Position
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
+_PACKAGE_VERSION = importlib.metadata.version("a3_antistasi_ultimate_save_data_parser")
+
 
 class SaveData(msgspec.Struct, kw_only=True):
     """Provides an interface for Antistasi Ultimate JSON save data.
@@ -136,25 +138,27 @@ class SaveData(msgspec.Struct, kw_only=True):
         """Decode a JSON string into a `SaveData` instance."""
         raw = msgspec.json.decode(json_str)  # naive conversion to Python builtins
 
-        # in-place conversions to builtins:
-        raw["saveTime"] = _convert_saveTime(raw["saveTime"])
-        raw["dateX"] = _convert_dateX(raw["dateX"])
-        raw["membersX"] = _convert_iterable_str_to_int(raw["membersX"])
-        raw["savedPlayers"] = _convert_iterable_str_to_int(raw["savedPlayers"])
-        raw["traderPosition"] = _convert_traderPosition(raw["traderPosition"])
+        # Conversions to other builtin forms:
+        saveTime = _convert_saveTime(raw["saveTime"])
+        dateX = _convert_dateX(raw["dateX"])
+        membersX = _convert_iterable_str_to_int(raw["membersX"])
+        savedPlayers = _convert_iterable_str_to_int(raw["savedPlayers"])
+        traderPosition = _convert_traderPosition(raw["traderPosition"])
 
-        _pkg_version = importlib.metadata.version(
-            "a3_antistasi_ultimate_save_data_parser"
-        )
-        _player_dict = PlayerData._dict_from_raw_dict(raw)  # noqa: SLF001
-        additional_fields = {
-            "__a3_antistasi_ultimate_save_data_parser_version__": _pkg_version,
-            "players": _player_dict,
-        }
+        # Additional/derived fields:
+        player_dict = PlayerData._dict_from_raw_dict(raw)  # noqa: SLF001
+        params = Params._from_dict(raw["params"])  # noqa: SLF001
         return msgspec.convert(
             {
                 **raw,
-                **additional_fields,
+                "__a3_antistasi_ultimate_save_data_parser_version__": _PACKAGE_VERSION,
+                "saveTime": saveTime,
+                "dateX": dateX,
+                "membersX": membersX,
+                "savedPlayers": savedPlayers,
+                "traderPosition": traderPosition,
+                "players": player_dict,
+                "params": params,
             },
             type=cls,
         )

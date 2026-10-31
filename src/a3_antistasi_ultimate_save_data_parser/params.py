@@ -1,24 +1,153 @@
-"""Implements `Params`."""
+"""Implements `Params`.
+
+All field names correspond to source JSON keys (unless noted),
+so don't conform to conventional Python 'PEP8' naming patterns.
+"""
+
+from typing import TYPE_CHECKING, Self
 
 import msgspec
 
+if TYPE_CHECKING:
+    from a3_antistasi_ultimate_save_data_parser._types import JSONDictNode
+
+_DISCARDED_KEYS = {
+    "AllParams",
+    # basic:
+    "BasicParams",
+    "BasicParamsSpacer",
+    "ScenarioParams",
+    "MemberParams",
+    "MemberParamsSpacer",
+    "ScriptParams",
+    "ScriptParamsSpacer",
+    "TimerParams",
+    "TimerParamsSpacer",
+    # ai and balance:
+    "AIParams",
+    "AIParamsSpacer",
+    "AIParamsSpacer2",
+    "BalanceParamsSpacer",
+    "RebelBalanceParams",
+    "AIBalanceParamsSpacer",
+    "AIBalanceParams",
+    "MiscBalanceParamsSpacer",
+    "MiscBalanceParams",
+    # bm:
+    "BMParams",
+    "BMParamsSpacer",
+    "BMParamsSpacer2",
+    # builder:
+    "BuilderParams",
+    "BuilderParamsSpacer",
+    # loot:
+    "LootParams",
+    "CrateParams",
+    "CrateParamsSpacer",
+    "VehicleLootParams",
+    "VehicleLootParamsSpacer",
+    "MiscLootParams",
+    "MiscLootParamsSpacer",
+    # extender:
+    "ExtenderParams",
+    "ExtenderParamsSpacer",
+    "YourExtenderNameSpacer",
+    "YourExtenderNameParams",
+    # experimental:
+    "ExperimentalParams",
+    "ExperimentalParamsSpacer",
+    # development:
+    "DevelopmentParams",
+    "DevelopmentParamsSpacer",
+    # deprecated:
+    "DeprecatedParams",
+    "DeprecatedParamsSpacer",
+}
+
 
 class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
-    """Mission parameters.
+    """Mission parameters."""
 
-    All field names correspond to source JSON keys (unless noted),
-    so don't conform to conventional Python 'PEP8' naming patterns.
+    basic: BasicParams
+    """Contains Basic mission parameters."""
+    ai: AIParams
+    """Contains AI and Balance mission parameters.
+    Doesn't directly correspond to a source JSON key,
+    but reflects AU source code structure.
     """
+    bm: BMParams
+    """Contains BlackMarket mission parameters.
+    Doesn't directly correspond to a source JSON key,
+    but reflects AU source code structure.
+    """
+    builder: BuilderParams
+    """Contains Builder mission parameters.
+    Doesn't directly correspond to a source JSON key,
+    but reflects AU source code structure.
+    """
+    loot: LootParams
+    """Contains Loot mission parameters.
+    Doesn't directly correspond to a source JSON key,
+    but reflects AU source code structure.
+    """
+    extender: ExtenderParams
+    """Contains Extender mission parameters.
+    Doesn't directly correspond to a source JSON key,
+    but reflects AU source code structure.
+    """
+    experimental: ExperimentalParams
+    """Contains Experimental mission parameters.
+    Doesn't directly correspond to a source JSON key,
+    but reflects AU source code structure.
+    """
+    deprecated: DeprecatedParams
+    """Contains Deprecated mission parameters.
+    Doesn't directly correspond to a source JSON key,
+    but reflects AU source code structure.
+    """
+    development: DevelopmentParams
+    """Contains Development mission parameters.
+    Doesn't directly correspond to a source JSON key,
+    but reflects AU source code structure.
+    """
+    A3A_flagGarageBlock: int
+    # A3A_showGroupBar: bool  # removed in AU 12.3.0.0
 
-    # AllParams
+    @classmethod
+    def _from_dict(cls, data: JSONDictNode) -> Self:
+        remaining_keys = data.keys() - _DISCARDED_KEYS
+        sub_params: dict[str, _SubParams] = {}
+        for param_field_name, sub_param_cls in {
+            "basic": BasicParams,
+            "ai": AIParams,
+            "bm": BMParams,
+            "builder": BuilderParams,
+            "loot": LootParams,
+            "extender": ExtenderParams,
+            "experimental": ExperimentalParams,
+            "deprecated": DeprecatedParams,
+            "development": DevelopmentParams,
+        }.items():
+            sub_param_data = {}
+            for f in sub_param_cls.__struct_fields__:
+                sub_param_data[f] = data[f]
 
-    AllParams: int
+            sub_params[param_field_name] = sub_param_cls(**sub_param_data)
+            remaining_keys -= sub_param_data.keys()
 
-    ## BasicParams
-    BasicParams: int
+        remaining_data = {k: v for k, v in data.items() if k in remaining_keys}
+        # pyrefly: ignore[bad-argument-type]
+        return cls(**remaining_data, **sub_params)
+
+
+class _SubParams(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
+    """Sub mission parameters."""
+
+
+class BasicParams(_SubParams):
+    """Basic mission parameters."""
 
     ### ScenarioParams
-    ScenarioParams: int
     gameMode: int
     areRivalsEnabled: bool
     rivalsDifficulty: int
@@ -28,22 +157,16 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     createAmbientSounds: bool
 
     ### MemberParams
-    MemberParamsSpacer: int
-    MemberParams: int
     membershipEnabled: bool
     A3A_guestCommander: bool
     tkPunish: bool
 
     ### ScriptParams
-    ScriptParamsSpacer: int
-    ScriptParams: int
     magRepack: bool
     RRTurretMagazines: bool
     newCarTowing: bool
 
     ### TimerParams
-    TimerParamsSpacer: int
-    TimerParams: int
     autoSave: bool
     autoSaveInterval: int
     A3A_idleTimeout: int
@@ -52,11 +175,10 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     A3A_GCThreshold: int
     settingsTimeMultiplier: int
 
-    BasicParamsSpacer: int
 
-    # AIParams
-    AIParamsSpacer: int
-    AIParams: int
+class AIParams(_SubParams):
+    """AI and Balance mission parameters."""
+
     distanceSPWN: int
     enemyNearDistance: int
     A3A_roadBlocksBaseChance: int
@@ -75,8 +197,6 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     AIrevivesOutsideSquad: int
 
     # RebelBalanceParams
-    BalanceParamsSpacer: int
-    RebelBalanceParams: int
     initialPlayerMoney: int
     initialFactionMoney: int
     deathPenalty: int
@@ -105,8 +225,6 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     A3A_rebelGarrisonGroupSize: int
 
     # AIBalanceParams
-    AIBalanceParamsSpacer: int
-    AIBalanceParams: int
     A3A_enemyBalanceMul: int
     A3A_enemyAttackMul: int
     A3A_invaderBalanceMul: int
@@ -130,8 +248,6 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     A3U_enableVehiclesForAI: bool
 
     # MiscBalanceParams
-    MiscBalanceParamsSpacer: int
-    MiscBalanceParams: int
     playerMarkersEnabled: bool
     hideEnemyMarkers: bool
     hideEnemyMarkersReconPlaneDistance: int
@@ -142,14 +258,10 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     A3A_ultimate_allowLockpickKits: bool
     A3A_ultimate_lockpickKitBreakChance: int
 
-    AIParamsSpacer2: int
 
-    ## BMParams
-    BMParamsSpacer: int
-    BMParams: int
+class BMParams(_SubParams):
+    """BlackMarket mission parameters."""
 
-    ### LootParams
-    LootParams: int
     disableTrader: bool
     A3A_ultimate_trader_selling_sellPriceMultiplier: int
     vanillaArmsDealer: bool
@@ -157,9 +269,10 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     A3U_blackMarketDiscountVehicle: int
     A3U_blackMarketDiscountWeapon: int
 
-    ## BuilderParams
-    BuilderParamsSpacer: int
-    BuilderParams: int
+
+class BuilderParams(_SubParams):
+    """Builder mission parameters."""
+
     A3A_builderPermissions: int
     A3A_builderLimit: int
     A3A_builderBuildTime: int
@@ -167,6 +280,10 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     A3U_HelipadTerrainSmoothing: bool
     saveZeusBuildings: bool
     maxConstructions: int
+
+
+class LootParams(_SubParams):
+    """Loot mission parameters."""
 
     ### UnlockParams
     UnlockParams: int
@@ -179,7 +296,6 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     cosmeticsEnabled: bool
 
     ### CrateParams
-    CrateParams: int
     lootCratesEnabled: bool
     lootCrateDistance: int
     lootCratePrice: int
@@ -202,44 +318,33 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     crateHelmetNumMax: int
     crateDeviceTypeMax: int
     crateDeviceNumMax: int
-    CrateParamsSpacer: int
 
     ### VehicleLootParams
-    VehicleLootParams: int
     enableVehicleAutoLock: bool
     enableVehicleAutoLockCiv: bool
     vehicleLockpickTime: int
-    VehicleLootParamsSpacer: int
 
     ### MiscLootParams
-    MiscLootParamsSpacer: int
-    MiscLootParams: int
     helmetLossChance: int
     helmetLossSound: bool
 
-    BMParamsSpacer2: int
 
-    ## ExtenderParams
-    ExtenderParamsSpacer: int
-    ExtenderParams: int
-    YourExtenderNameSpacer: object  # added in AU 12.3.0.0?
-    YourExtenderNameParams: object  # added in AU 12.3.0.0?
+class ExtenderParams(_SubParams):
+    """Extender mission parameters."""
+
     A3UE_YourExtenderName_ParamName: object  # added in AU 12.3.0.0?
 
-    ## ExperimentalParams
-    ExperimentalParamsSpacer: int
-    ExperimentalParams: int
 
-    ## DevelopmentParams
-    DevelopmentParamsSpacer: int
-    DevelopmentParams: int
+class ExperimentalParams(_SubParams):
+    """Experimental mission parameters."""
+
+
+class DevelopmentParams(_SubParams):
+    """Development mission parameters."""
+
     LogLevel: int
     A3A_logDebugConsole: int
 
-    ## DeprecatedParams
-    DeprecatedParams: object  # added in AU 12.3.0.0
-    DeprecatedParamsSpacer: object  # added in AU 12.3.0.0
 
-    A3A_flagGarageBlock: int
-
-    # A3A_showGroupBar: bool  # removed in AU 12.3.0.0
+class DeprecatedParams(_SubParams):
+    """Deprecated mission parameters."""
