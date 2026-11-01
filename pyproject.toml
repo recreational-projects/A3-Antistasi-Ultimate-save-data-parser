@@ -73,4 +73,5 @@ runtime-evaluated-base-classes = ["msgspec.Struct"]
 ]
 "scripts/*.py" = [
     "T201",  # flake8-print
+    "SLF001",  # private-member-access
 ]

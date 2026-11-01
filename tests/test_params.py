@@ -1,5 +1,6 @@
 """Tests for `params` module."""
 
+from itertools import chain
 from typing import TYPE_CHECKING
 
 import pytest
@@ -7,6 +8,8 @@ import pytest
 from a3_antistasi_ultimate_save_data_parser.params import Params
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
+
     from a3_antistasi_ultimate_save_data_parser._types import JSONDictNode
 
 
@@ -22,8 +25,8 @@ class TestParams:
         """Test that sample data root keys match expected `Param` fields."""
         # arrange
         _sub_params_types = Params._get_sub_params_types()
-        _sub_params_handled_keys = set().union(
-            *(cls_.__struct_fields__ for cls_ in _sub_params_types.values())
+        _sub_params_handled_keys = _flattened_set(
+            cls_.__struct_fields__ for cls_ in _sub_params_types.values()
         )
         handled_keys = (
             set(Params.__struct_fields__)
@@ -56,8 +59,8 @@ class TestParams:
         my_params = Params._from_dict(source_dict)
         # assert
         _sub_params_types = Params._get_sub_params_types()
-        _my_params_sub_params_relevant_keys = set().union(
-            *(
+        _my_params_sub_params_relevant_keys = set(
+            chain.from_iterable(
                 getattr(my_params, sub_param).__struct_fields__
                 for sub_param in _sub_params_types
             )
@@ -68,3 +71,7 @@ class TestParams:
         assert (
             my_params_relevant_keys == set(source_dict.keys()) - Params._DISCARDED_KEYS
         )
+
+
+def _flattened_set(iterable: Iterable[Iterable[object]]) -> set[object]:
+    return set(chain.from_iterable(iterable))
