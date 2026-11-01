@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     """Mission parameters."""
 
-    _DISCARDED_KEYS: ClassVar[set[str]] = {
+    _DISCARD_KEYS: ClassVar[set[str]] = {
         "AllParams",
         # basic:
         "BasicParams",
@@ -69,44 +69,56 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     }
 
     basic: BasicParams
-    """Contains Basic mission parameters."""
+    """Contains Basic mission parameters as a `BasicParams` instance.
+
+    Doesn't directly correspond to a source JSON key,
+    but reflects AU source code structure.
+    """
     ai: AIParams
-    """Contains AI and Balance mission parameters.
+    """Contains AI and Balance mission parameters as an `AIParams` instance.
+
     Doesn't directly correspond to a source JSON key,
     but reflects AU source code structure.
     """
     bm: BMParams
-    """Contains BlackMarket mission parameters.
+    """Contains BlackMarket mission parameters as a `BMParams` instance.
+
     Doesn't directly correspond to a source JSON key,
     but reflects AU source code structure.
     """
     builder: BuilderParams
-    """Contains Builder mission parameters.
+    """Contains Builder mission parameters as a `BuilderParams` instance.
+
     Doesn't directly correspond to a source JSON key,
     but reflects AU source code structure.
     """
     loot: LootParams
-    """Contains Loot mission parameters.
+    """Contains Loot mission parameters as a `LootParams` instance.
+
     Doesn't directly correspond to a source JSON key,
     but reflects AU source code structure.
     """
     extender: ExtenderParams
-    """Contains Extender mission parameters.
+    """Contains Extender mission parameters as an `ExtenderParams` instance.
+
     Doesn't directly correspond to a source JSON key,
     but reflects AU source code structure.
     """
     experimental: ExperimentalParams
-    """Contains Experimental mission parameters.
+    """Contains Experimental mission parameters as an `ExperimentalParams` instance.
+
     Doesn't directly correspond to a source JSON key,
     but reflects AU source code structure.
     """
     deprecated: DeprecatedParams
-    """Contains Deprecated mission parameters.
+    """Contains Deprecated mission parameters as a `DeprecatedParams` instance.
+
     Doesn't directly correspond to a source JSON key,
     but reflects AU source code structure.
     """
     development: DevelopmentParams
-    """Contains Development mission parameters.
+    """Contains Development mission parameters as a `DevelopmentParams` instance.
+
     Doesn't directly correspond to a source JSON key,
     but reflects AU source code structure.
     """
@@ -126,7 +138,7 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
             consumed_keys |= _sub_param_data.keys()
 
         remaining_data = {
-            k: dict_[k] for k in dict_ if k not in consumed_keys | cls._DISCARDED_KEYS
+            k: dict_[k] for k in dict_ if k not in consumed_keys | cls._DISCARD_KEYS
         }
         return msgspec.convert({**remaining_data, **sub_params}, cls)
 

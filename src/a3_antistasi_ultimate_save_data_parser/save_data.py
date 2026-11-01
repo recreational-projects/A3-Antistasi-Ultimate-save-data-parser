@@ -24,14 +24,17 @@ class SaveData(msgspec.Struct, kw_only=True):
     so don't conform to conventional Python 'PEP8' naming patterns.
     """
 
-    DERIVED_FIELDS: ClassVar[set[str]] = {
+    __DERIVED_FIELDS__: ClassVar[set[str]] = {
         "__a3_antistasi_ultimate_save_data_parser_version__",
         "players",
     }
-    """Fields that are derived during parsing, so will never be in input."""
+    """@public Fields that are derived during parsing, so will never be in input."""
 
     __a3_antistasi_ultimate_save_data_parser_version__: str
-    """@public The version of this library used to parse the JSON data."""
+    """@public The version of this library used to parse the JSON data.
+
+    Does not correspond to a source JSON key.
+    """
 
     # Key metadata:
     name: str  # including empty ""
@@ -50,7 +53,7 @@ class SaveData(msgspec.Struct, kw_only=True):
     players: dict[SteamId64, PlayerData] = {}
     """`dict` mapping `SteamId64` to `.player.PlayerData` instances.
 
-    Does not correspond directly to a key in source JSON.
+    Does not correspond directly to a source JSON key.
     """
 
     # World:

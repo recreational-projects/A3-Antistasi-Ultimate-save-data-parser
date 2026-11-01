@@ -6,13 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project tries to adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [UNRELEASED] - TBC
+## [0.5.0] - 2026-11-01
 
 ### Added
 
 * `SaveData.Params`: hierarchical structure; discard source data that doesn't contain actual information
-  (probably artifacts of the Antistasi Ultimate Params dialog layout)
-
+  (artifacts of the Antistasi Ultimate Params dialog layout)
+* `SaveData.DERIVED_FIELDS` class variable renamed to `SaveData.__DERIVED_FIELDS__`
+* improved robustness, tests and type hints
+* docs: improved documentation
+* ci: pin exact versions of dev/CI dependencies
 
 ## [0.4.0] - 2026-10-30
 
@@ -73,6 +76,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 Initial documented version
 
 
+[0.5.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.4.0..v0.5.0
 [0.4.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.3.0..v0.4.0
 [0.3.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.2.0..v0.3.0
 [0.2.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.1.0..v0.2.0
