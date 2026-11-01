@@ -44,7 +44,9 @@ def main() -> None:
 
     _save_keys_intersect = _input_dict_root_keys & SaveData.__struct_fields__
     missing_root_input_keys = (
-        set(SaveData.__struct_fields__) - _save_keys_intersect - SaveData.DERIVED_FIELDS
+        set(SaveData.__struct_fields__)
+        - _save_keys_intersect
+        - SaveData.__DERIVED_FIELDS__
     )
 
     player_input_keys = {
@@ -67,7 +69,7 @@ def main() -> None:
 
     params_handled_keys = (
         set(Params.__struct_fields__)
-        | set(Params._DISCARDED_KEYS)
+        | set(Params._DISCARD_KEYS)
         | _sub_params_handled_keys
     ) - _sub_params_types.keys()
 

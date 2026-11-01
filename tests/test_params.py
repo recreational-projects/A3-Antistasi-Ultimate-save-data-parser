@@ -30,7 +30,7 @@ class TestParams:
         )
         handled_keys = (
             set(Params.__struct_fields__)
-            | set(Params._DISCARDED_KEYS)
+            | set(Params._DISCARD_KEYS)
             | _sub_params_handled_keys
         ) - _sub_params_types.keys()
         # act
@@ -68,9 +68,7 @@ class TestParams:
         my_params_relevant_keys = (
             set(my_params.__struct_fields__) | _my_params_sub_params_relevant_keys
         ) - _sub_params_types.keys()
-        assert (
-            my_params_relevant_keys == set(source_dict.keys()) - Params._DISCARDED_KEYS
-        )
+        assert my_params_relevant_keys == set(source_dict.keys()) - Params._DISCARD_KEYS
 
 
 def _flattened_set(iterable: Iterable[Iterable[object]]) -> set[object]:

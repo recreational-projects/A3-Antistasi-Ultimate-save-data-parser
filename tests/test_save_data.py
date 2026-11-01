@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 
 _JSON_OVERRIDES_PATH = Path(__file__).parent / "overrides.json"
 """NB: this is a composite sample and won't be internally consistent."""
-_PACKAGE_MINOR_VERSION = "0.4.x"
+_PACKAGE_MINOR_VERSION = "0.5.x"
 
 
 class TestSaveData:
@@ -39,7 +39,7 @@ class TestSaveData:
         # act
         # assert
         assert sample_data_root_keys.issuperset(
-            save_data_field_names - SaveData.DERIVED_FIELDS
+            save_data_field_names - SaveData.__DERIVED_FIELDS__
         )
 
     def test_decode_base_sample_str(self, base_sample_str: str) -> None:
