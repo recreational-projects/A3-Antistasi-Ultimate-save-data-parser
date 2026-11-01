@@ -12,7 +12,7 @@ from .player_data import PlayerData
 from .position import Position
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Collection, Iterable
 
 _PACKAGE_VERSION = importlib.metadata.version("a3_antistasi_ultimate_save_data_parser")
 
@@ -178,7 +178,7 @@ def _convert_dateX(value: tuple[int, int, int, int, int]) -> dt.datetime:
     return dt.datetime(y, m, d, h, mn, tzinfo=None)
 
 
-def _convert_traderPosition(value: Iterable[float]) -> Position | None:
+def _convert_traderPosition(value: Collection[float]) -> Position | None:
     if not value:
         return None
 

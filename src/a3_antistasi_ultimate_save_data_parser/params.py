@@ -4,69 +4,69 @@ All field names correspond to source JSON keys (unless noted),
 so don't conform to conventional Python 'PEP8' naming patterns.
 """
 
-from typing import TYPE_CHECKING, Self
+from typing import TYPE_CHECKING, ClassVar, Self
 
 import msgspec
 
 if TYPE_CHECKING:
     from a3_antistasi_ultimate_save_data_parser._types import JSONDictNode
 
-_DISCARDED_KEYS = {
-    "AllParams",
-    # basic:
-    "BasicParams",
-    "BasicParamsSpacer",
-    "ScenarioParams",
-    "MemberParams",
-    "MemberParamsSpacer",
-    "ScriptParams",
-    "ScriptParamsSpacer",
-    "TimerParams",
-    "TimerParamsSpacer",
-    # ai and balance:
-    "AIParams",
-    "AIParamsSpacer",
-    "AIParamsSpacer2",
-    "BalanceParamsSpacer",
-    "RebelBalanceParams",
-    "AIBalanceParamsSpacer",
-    "AIBalanceParams",
-    "MiscBalanceParamsSpacer",
-    "MiscBalanceParams",
-    # bm:
-    "BMParams",
-    "BMParamsSpacer",
-    "BMParamsSpacer2",
-    # builder:
-    "BuilderParams",
-    "BuilderParamsSpacer",
-    # loot:
-    "LootParams",
-    "CrateParams",
-    "CrateParamsSpacer",
-    "VehicleLootParams",
-    "VehicleLootParamsSpacer",
-    "MiscLootParams",
-    "MiscLootParamsSpacer",
-    # extender:
-    "ExtenderParams",
-    "ExtenderParamsSpacer",
-    "YourExtenderNameSpacer",
-    "YourExtenderNameParams",
-    # experimental:
-    "ExperimentalParams",
-    "ExperimentalParamsSpacer",
-    # development:
-    "DevelopmentParams",
-    "DevelopmentParamsSpacer",
-    # deprecated:
-    "DeprecatedParams",
-    "DeprecatedParamsSpacer",
-}
-
 
 class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     """Mission parameters."""
+
+    _DISCARDED_KEYS: ClassVar[set[str]] = {
+        "AllParams",
+        # basic:
+        "BasicParams",
+        "BasicParamsSpacer",
+        "ScenarioParams",
+        "MemberParams",
+        "MemberParamsSpacer",
+        "ScriptParams",
+        "ScriptParamsSpacer",
+        "TimerParams",
+        "TimerParamsSpacer",
+        # ai and balance:
+        "AIParams",
+        "AIParamsSpacer",
+        "AIParamsSpacer2",
+        "BalanceParamsSpacer",
+        "RebelBalanceParams",
+        "AIBalanceParamsSpacer",
+        "AIBalanceParams",
+        "MiscBalanceParamsSpacer",
+        "MiscBalanceParams",
+        # bm:
+        "BMParams",
+        "BMParamsSpacer",
+        "BMParamsSpacer2",
+        # builder:
+        "BuilderParams",
+        "BuilderParamsSpacer",
+        # loot:
+        "LootParams",
+        "CrateParams",
+        "CrateParamsSpacer",
+        "VehicleLootParams",
+        "VehicleLootParamsSpacer",
+        "MiscLootParams",
+        "MiscLootParamsSpacer",
+        # extender:
+        "ExtenderParams",
+        "ExtenderParamsSpacer",
+        "YourExtenderNameSpacer",
+        "YourExtenderNameParams",
+        # experimental:
+        "ExperimentalParams",
+        "ExperimentalParamsSpacer",
+        # development:
+        "DevelopmentParams",
+        "DevelopmentParamsSpacer",
+        # deprecated:
+        "DeprecatedParams",
+        "DeprecatedParamsSpacer",
+    }
 
     basic: BasicParams
     """Contains Basic mission parameters."""
@@ -114,30 +114,30 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     # A3A_showGroupBar: bool  # removed in AU 12.3.0.0
 
     @classmethod
-    def _from_dict(cls, data: JSONDictNode) -> Self:
-        remaining_keys = data.keys() - _DISCARDED_KEYS
+    def _from_dict(cls, dict_: JSONDictNode) -> Self:
+        """Construct a `Params` instance from a `dict` JSON conversion."""
         sub_params: dict[str, _SubParams] = {}
-        for param_field_name, sub_param_cls in {
-            "basic": BasicParams,
-            "ai": AIParams,
-            "bm": BMParams,
-            "builder": BuilderParams,
-            "loot": LootParams,
-            "extender": ExtenderParams,
-            "experimental": ExperimentalParams,
-            "deprecated": DeprecatedParams,
-            "development": DevelopmentParams,
-        }.items():
-            sub_param_data = {}
-            for f in sub_param_cls.__struct_fields__:
-                sub_param_data[f] = data[f]
+        consumed_keys: set[str] = set()
+        for param_field_name, sub_param_type in cls._get_sub_params_types().items():
+            _sub_param_data = {f: dict_[f] for f in sub_param_type.__struct_fields__}
+            sub_params[param_field_name] = msgspec.convert(
+                _sub_param_data, sub_param_type
+            )
+            consumed_keys |= _sub_param_data.keys()
 
-            sub_params[param_field_name] = sub_param_cls(**sub_param_data)
-            remaining_keys -= sub_param_data.keys()
+        remaining_data = {
+            k: dict_[k] for k in dict_ if k not in consumed_keys | cls._DISCARDED_KEYS
+        }
+        return msgspec.convert({**remaining_data, **sub_params}, cls)
 
-        remaining_data = {k: v for k, v in data.items() if k in remaining_keys}
-        # pyrefly: ignore[bad-argument-type]
-        return cls(**remaining_data, **sub_params)
+    @classmethod
+    def _get_sub_params_types(cls) -> dict[str, type[_SubParams]]:
+        """Get a `dict` mapping sub parameter names to types, via introspection."""
+        return {
+            m.name: m.type
+            for m in msgspec.structs.fields(cls)
+            if issubclass(m.type, _SubParams)
+        }
 
 
 class _SubParams(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
