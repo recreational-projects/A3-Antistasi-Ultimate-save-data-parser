@@ -1,4 +1,7 @@
-"""Implements position classes."""
+"""Implements position classes.
+
+See also https://community.bistudio.com/wiki/Position
+"""
 
 from typing import TYPE_CHECKING, Self
 
@@ -12,8 +15,6 @@ class Position(
     msgspec.Struct, array_like=True, forbid_unknown_fields=True, kw_only=True
 ):
     """A 3D position in the world.
-
-    See also https://community.bistudio.com/wiki/Position
 
     Source JSON doesn't identify variants with differing datums
     like PositionASL, Position ATL, PositionAGL.
@@ -32,10 +33,7 @@ class Position(
 class Position2D(
     msgspec.Struct, array_like=True, forbid_unknown_fields=True, kw_only=True
 ):
-    """A 2D position in the world.
-
-    See also https://community.bistudio.com/wiki/Position
-    """
+    """A 2D position in the world."""
 
     x: float
     y: float

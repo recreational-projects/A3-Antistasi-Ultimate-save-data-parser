@@ -67,9 +67,8 @@ class TestSaveData:
         assert isinstance(sd.posHQ, list)
         assert all(isinstance(item, (tuple | Position)) for item in sd.posHQ)
         for item in [i for i in sd.posHQ if isinstance(i, tuple)]:
-                assert isinstance(item[0], float)
-                assert isinstance(item[1], Position)
-
+            assert isinstance(item[0], float)
+            assert isinstance(item[1], Position)
 
         assert isinstance(sd.params, Params)
 
