@@ -3,16 +3,14 @@
 import datetime as dt
 import importlib.metadata
 from collections.abc import Sequence
-from typing import TYPE_CHECKING, ClassVar, Literal
+from typing import TYPE_CHECKING, Any, ClassVar, Literal
 
 import msgspec
-
-from a3_antistasi_ultimate_save_data_parser.position import Position2D
 
 from ._types import SteamId64
 from .params import Params
 from .player_data import PlayerData
-from .position import Position
+from .position import Position, Position2D
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -77,7 +75,8 @@ class SaveData(msgspec.Struct, kw_only=True):
     randomizeRebelLoadoutUniforms: bool
     petrosPosition: Position
     unlockedVehicleTypes: list[str]  # e.g. ["Unarmed Cars", "Armed Cars"]
-    posHQ: list[object]
+    posHQ: list[tuple[float, Any] | Any]
+    """Actual type is `list[tuple[float, .position.Position] | .position.Position]`."""
     # msgspec doesn't allow more complex type union expressions
     # e.g. can't use more than one array-like, such as _RawPosition/list/tuple
     # this forces parsing to positions later
@@ -198,18 +197,18 @@ def _convert_traderPosition(value: Sequence[float]) -> Position2D | None:
 
 def _convert_posHQ(
     value: Iterable[tuple],
-) -> tuple[tuple[object, Position] | Position, ...]:
-    output = ()
+) -> list[tuple[float, Position] | Position]:
+    output: list[tuple[float, Position] | Position] = []
     for item in value:
         if _is_raw_position(item):
-            output += (Position._from_raw_position_array(item),)
+            output.append(Position._from_raw_position_array(item))
 
         elif (
             isinstance(item, Sequence)
             and isinstance(item[0], float)
             and _is_raw_position(item[1])
         ):
-            output += (((item[0]), Position._from_raw_position_array(item[1])),)
+            output.append((item[0], Position._from_raw_position_array(item[1])))
 
         else:
             err_msg = (
