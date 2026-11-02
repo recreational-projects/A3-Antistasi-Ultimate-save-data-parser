@@ -4,6 +4,7 @@ import datetime as dt
 import importlib.metadata
 from collections.abc import Sequence
 from typing import TYPE_CHECKING, Any, ClassVar, Literal
+from uuid import UUID
 
 import msgspec
 
@@ -47,7 +48,7 @@ class SaveData(msgspec.Struct, kw_only=True):
     saveTime: dt.datetime
     """UTC timestamp of the save."""
     serverID: str | Literal[False]
-    campaignID: str
+    campaignID: UUID
     version: str
     params: Params
     """Mission parameters as a `.params.Params` instance."""
