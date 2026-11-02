@@ -13,7 +13,10 @@ if TYPE_CHECKING:
 
 
 class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
-    """Mission parameters."""
+    """Mission parameters.
+
+    Ref: https://github.com/Antistasi-Ultimate-Community/A3-Antistasi-Ultimate/blob/unstable/A3A/addons/core/Params.hpp
+    """
 
     _DISCARD_KEYS: ClassVar[set[str]] = {
         "AllParams",
@@ -127,7 +130,7 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
 
     @classmethod
     def _from_dict(cls, dict_: JSONDictNode) -> Self:
-        """Construct a `Params` instance from a `dict` JSON conversion."""
+        """Construct a type-validated instance from a `dict` JSON conversion."""
         sub_params: dict[str, _SubParams] = {}
         consumed_keys: set[str] = set()
         for param_field_name, sub_param_type in cls._get_sub_params_types().items():
@@ -140,7 +143,7 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
         remaining_data = {
             k: dict_[k] for k in dict_ if k not in consumed_keys | cls._DISCARD_KEYS
         }
-        return msgspec.convert({**remaining_data, **sub_params}, cls)
+        return msgspec.convert({**remaining_data, **sub_params}, type=cls)
 
     @classmethod
     def _get_sub_params_types(cls) -> dict[str, type[_SubParams]]:

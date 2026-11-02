@@ -6,11 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project tries to adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.6.0] - 2026-11-02
+
+### Added
+
+* validate `SaveData.players`
+* `SaveData.posHQ`: parse `Position`s
+* `SaveData.campaignID`: parse as `uuid.UUID`
+* docs: improved documentation and type hints
+
+### Changed
+
+* `SaveData.traderPosition` parsed to `Position2D`, instead of `Position` with `z==0`
+
+
 ## [0.5.0] - 2026-11-01
 
 ### Added
 
-* `SaveData.Params`: hierarchical structure; discard source data that doesn't contain actual information
+* `SaveData.params`: hierarchical structure; discard source data that doesn't contain actual information
   (artifacts of the Antistasi Ultimate Params dialog layout)
 * `SaveData.DERIVED_FIELDS` class variable renamed to `SaveData.__DERIVED_FIELDS__`
 * improved robustness, tests and type hints
@@ -76,6 +90,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 Initial documented version
 
 
+[0.6.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.5.0..v0.6.0
 [0.5.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.4.0..v0.5.0
 [0.4.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.3.0..v0.4.0
 [0.3.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.2.0..v0.3.0
