@@ -4,6 +4,7 @@ import datetime as dt
 import json
 from pathlib import Path
 from typing import TYPE_CHECKING
+from uuid import UUID
 
 import msgspec
 import pytest
@@ -49,27 +50,22 @@ class TestSaveData:
         sd = SaveData.decode_str(base_sample_str)
         # assert
         assert isinstance(sd, SaveData)
-        _pkg_minor_version = _PACKAGE_MINOR_VERSION.split(".")[0:2]
         assert (
             sd.__a3_antistasi_ultimate_save_data_parser_version__.split(".")[0:2]
-            == _pkg_minor_version
+            == _PACKAGE_MINOR_VERSION.split(".")[0:2]
         )
-        assert sd.aggressionOccupants == [1, []]
-        assert _A3A_fuelAmountleftArray_conforms_to_type(sd.A3A_fuelAmountleftArray)
         assert sd.saveTime == dt.datetime(
             2026, 10, 28, 17, 31, 34, 905000, tzinfo=dt.UTC
         )
-        assert sd.dateX == dt.datetime(2035, 6, 10, 10, 26, tzinfo=None)
-        assert isinstance(sd.savedPlayers[0], int)
+        assert isinstance(sd.campaignID, UUID)
         assert isinstance(sd.membersX[0], int)
+        assert isinstance(sd.savedPlayers[0], int)
         assert isinstance(sd.players[12345678901234567], PlayerData)
+        assert sd.dateX == dt.datetime(2035, 6, 10, 10, 26, tzinfo=None)
+        assert _posHQ_conforms_to_type(sd.posHQ)
+        assert sd.aggressionOccupants == [1, []]
         assert sd.traderPosition is None
-        assert isinstance(sd.posHQ, list)
-        assert all(isinstance(item, (tuple | Position)) for item in sd.posHQ)
-        for item in [i for i in sd.posHQ if isinstance(i, tuple)]:
-            assert isinstance(item[0], float)
-            assert isinstance(item[1], Position)
-
+        assert _A3A_fuelAmountleftArray_conforms_to_type(sd.A3A_fuelAmountleftArray)
         assert isinstance(sd.params, Params)
 
     @pytest.fixture
@@ -88,8 +84,8 @@ class TestSaveData:
         # assert
         assert isinstance(sd, SaveData)
         assert sd.aggressionOccupants == [1, [[19.2, -0.2], [-4.25, 0.25]]]
-        assert _A3A_fuelAmountleftArray_conforms_to_type(sd.A3A_fuelAmountleftArray)
         assert isinstance(sd.traderPosition, Position2D)
+        assert _A3A_fuelAmountleftArray_conforms_to_type(sd.A3A_fuelAmountleftArray)
         assert isinstance(sd.params, Params)
 
 
@@ -102,5 +98,18 @@ def _A3A_fuelAmountleftArray_conforms_to_type(
             all(isinstance(item, tuple) for item in value),
             all(isinstance(item[0], Position) for item in value),
             all(isinstance(item[1], float) for item in value),
+        )
+    )
+
+
+def _posHQ_conforms_to_type(value: list[tuple[float, Position] | Position]) -> bool:
+    return all(
+        (
+            isinstance(value, list),
+            all(isinstance(item, (tuple | Position)) for item in value),
+            all(
+                isinstance(item[0], float) and isinstance(item[1], Position)
+                for item in [i for i in value if isinstance(i, tuple)]
+            ),
         )
     )
