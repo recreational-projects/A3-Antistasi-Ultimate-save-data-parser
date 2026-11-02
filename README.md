@@ -5,7 +5,7 @@ This feature was added in AU v12.2.0 (public testing only as of 2026-10-30).
 
 Experimental/alpha. Only tested with output from AU v12.3.0.0.
 
-* Outputs Python [`msgspec.Struct`](https://msgspec.dev/) classes
+* Outputs Python [`msgspec.Struct`](https://msgspec.dev/) classes, validating all data types
 * Datetime values are parsed as Python `datetime.datetime` built-in objects
 * Position values are parsed as a `Position` class with `x`, `y`, `z` fields, where possible
 * `params` is parsed as a hierarchical `Params` class

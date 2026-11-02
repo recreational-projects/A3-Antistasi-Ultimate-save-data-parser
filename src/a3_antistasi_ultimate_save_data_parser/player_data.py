@@ -30,7 +30,7 @@ class PlayerData(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     def _dict_from_raw_dict(cls, raw_dict: dict[str, Any]) -> dict[SteamId64, Self]:
         """Derive `dict` of `STEAM_ID`: `PlayerData()`.
 
-        from e.g. the initial conversion of savedata to Python builtins,
+        from e.g. the initial conversion of save data JSON to `dict` of Python builtins,
         which contains keys like 'player_STEAM_ID_scorePlayer'.
         """
         steam_ids = {
@@ -38,22 +38,23 @@ class PlayerData(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
             for k in raw_dict
             if k.startswith(_SOURCE_PLAYER_FIELDS_PREFIX)
         }
-        output_dict: dict[SteamId64, Self] = {}
-        for steam_id in steam_ids:
-            output_dict[steam_id] = cls._from_raw_dict(
-                raw_dict=raw_dict, steam_id=steam_id
-            )
-
-        return output_dict
+        return {
+            steam_id: cls._from_raw_dict(raw_dict=raw_dict, steam_id=steam_id)
+            for steam_id in steam_ids
+        }
 
     @classmethod
     def _from_raw_dict(cls, *, raw_dict: dict[str, Any], steam_id: SteamId64) -> Self:
+        """Construct a type-validated instance.
+
+        from e.g. the initial conversion of save data JSON to `dict` of Python builtins,
+        which contains keys like 'player_STEAM_ID_scorePlayer'.
+        """
         field_names = {f.name for f in msgspec.structs.fields(cls)}
-        return cls(
-            **{
-                field_name: raw_dict[
-                    f"{_SOURCE_PLAYER_FIELDS_PREFIX}{steam_id}_{field_name}"
-                ]
-                for field_name in field_names
-            }
-        )
+        player_data = {
+            field_name: raw_dict[
+                f"{_SOURCE_PLAYER_FIELDS_PREFIX}{steam_id}_{field_name}"
+            ]
+            for field_name in field_names
+        }
+        return msgspec.convert(player_data, type=cls)
