@@ -51,7 +51,7 @@ class SaveData(msgspec.Struct, kw_only=True):
     savedPlayers: list[SteamId64]
     """`list` of `SteamId64`s."""
     players: dict[SteamId64, PlayerData] = {}
-    """`dict` mapping `SteamId64` to `.player.PlayerData` instances.
+    """`dict` mapping `SteamId64` to `.player_data.PlayerData` instances.
 
     Does not correspond directly to a source JSON key.
     """
@@ -149,7 +149,7 @@ class SaveData(msgspec.Struct, kw_only=True):
         traderPosition = _convert_traderPosition(raw["traderPosition"])
 
         # Additional/derived fields:
-        player_dict = PlayerData._dict_from_raw_dict(raw)  # noqa: SLF001
+        players_dict = PlayerData._dict_from_raw_dict(raw)  # noqa: SLF001
         params = Params._from_dict(raw["params"])  # noqa: SLF001
         return msgspec.convert(
             {
@@ -160,7 +160,7 @@ class SaveData(msgspec.Struct, kw_only=True):
                 "membersX": membersX,
                 "savedPlayers": savedPlayers,
                 "traderPosition": traderPosition,
-                "players": player_dict,
+                "players": players_dict,
                 "params": params,
             },
             type=cls,
