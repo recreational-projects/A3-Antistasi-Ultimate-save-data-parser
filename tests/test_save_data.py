@@ -47,7 +47,7 @@ class TestSaveData:
         """Test `SaveData.decode_str`."""
         # arrange
         # act
-        sd = SaveData.decode_str(base_sample_str)
+        sd = SaveData.from_json_str(base_sample_str)
         # assert
         assert isinstance(sd, SaveData)
         assert sd.__a3_antistasi_ultimate_save_data_parser_version__.split(".")[
@@ -79,7 +79,7 @@ class TestSaveData:
         """Test `SaveData.decode_str`."""
         # arrange
         # act
-        sd = SaveData.decode_str(complex_sample_str)
+        sd = SaveData.from_json_str(complex_sample_str)
         # assert
         assert isinstance(sd, SaveData)
         assert sd.aggressionOccupants == [1, [[19.2, -0.2], [-4.25, 0.25]]]

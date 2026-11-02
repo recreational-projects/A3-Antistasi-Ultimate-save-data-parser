@@ -100,7 +100,7 @@ def main() -> None:
     _print_iterable(player_input_keys)
     print("\nAttempting to decode input JSON `str` to `SaveData`:")
     try:
-        SaveData.decode_str(input_str)
+        SaveData.from_json_str(input_str)
         print("OK")
     except TypeError as e:
         pprint(e)
