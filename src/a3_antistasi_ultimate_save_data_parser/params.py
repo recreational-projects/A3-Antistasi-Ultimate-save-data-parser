@@ -69,6 +69,10 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
         # deprecated:
         "DeprecatedParams",
         "DeprecatedParamsSpacer",
+        # removed:
+        "A3A_showGroupBar",
+        # Removed in A3U 12.3.0.0.
+        # May appear in new exports made from A3U 12.2.0.0 saves
     }
 
     basic: BasicParams
@@ -134,7 +138,9 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
         sub_params: dict[str, _SubParams] = {}
         consumed_keys: set[str] = set()
         for param_field_name, sub_param_type in cls._get_sub_params_types().items():
-            _sub_param_data = {f: dict_.get(f) for f in sub_param_type.__struct_fields__}
+            _sub_param_data = {
+                f: dict_.get(f) for f in sub_param_type.__struct_fields__
+            }
             sub_params[param_field_name] = msgspec.convert(
                 _sub_param_data, sub_param_type
             )
