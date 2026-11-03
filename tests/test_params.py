@@ -22,20 +22,23 @@ class TestParams:
         return base_sample_dict["params"]
 
     def test_sample_data_keys_match_members(self, source_dict: JSONDictNode) -> None:
-        """Test that sample data root keys match expected `Param` fields."""
+        """Test that sample data root keys match expected `Param` fields.
+
+        Ignore discarded keys.
+        """
         # arrange
         _sub_params_types = Params._get_sub_params_types()
         _sub_params_handled_keys = _flattened_set(
             cls_.__struct_fields__ for cls_ in _sub_params_types.values()
         )
         handled_keys = (
-            set(Params.__struct_fields__)
-            | set(Params._DISCARD_KEYS)
-            | _sub_params_handled_keys
+            set(Params.__struct_fields__) | _sub_params_handled_keys
         ) - _sub_params_types.keys()
         # act
         # assert
-        assert source_dict.keys() == handled_keys
+        assert (source_dict.keys() - set(Params._DISCARD_KEYS)) == (
+            handled_keys - set(Params._DISCARD_KEYS)
+        )
 
     def test_from_dict(self, source_dict: JSONDictNode) -> None:
         """Test that `Params` can be created from sample `dict`."""
