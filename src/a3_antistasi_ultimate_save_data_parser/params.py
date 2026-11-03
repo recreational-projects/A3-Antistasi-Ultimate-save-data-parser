@@ -134,7 +134,7 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
         sub_params: dict[str, _SubParams] = {}
         consumed_keys: set[str] = set()
         for param_field_name, sub_param_type in cls._get_sub_params_types().items():
-            _sub_param_data = {f: dict_[f] for f in sub_param_type.__struct_fields__}
+            _sub_param_data = {f: dict_.get(f) for f in sub_param_type.__struct_fields__}
             sub_params[param_field_name] = msgspec.convert(
                 _sub_param_data, sub_param_type
             )
@@ -347,7 +347,9 @@ class LootParams(_SubParams):
 class ExtenderParams(_SubParams):
     """Extender mission parameters."""
 
-    A3UE_YourExtenderName_ParamName: object  # added in AU 12.3.0.0?
+    A3UE_YourExtenderName_ParamName: object | None = None
+    # not sure where this presumably placeholder field
+    # comes from. Added in AU 12.3.0.0, or is it from an extender?
 
 
 class ExperimentalParams(_SubParams):
