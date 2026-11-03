@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project tries to adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.7.0] - 2026-11-03
+
+### Added
+
+* `SaveData.params` handles missing `A3UE_YourExtenderName_ParamName` placeholder param
+* `SaveData.params` discards `A3A_showGroupBar` removed from AU v12.3.0.0
+  (as it can probably still appear in exports from AU >= v12.3.0.0, if made from existing AU < 12.3.0.0 saves) 
+
+
 ## [0.6.0] - 2026-11-02
 
 ### Added
@@ -90,6 +99,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 Initial documented version
 
 
+[0.7.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.6.0..v0.7.0
 [0.6.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.5.0..v0.6.0
 [0.5.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.4.0..v0.5.0
 [0.4.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.3.0..v0.4.0
