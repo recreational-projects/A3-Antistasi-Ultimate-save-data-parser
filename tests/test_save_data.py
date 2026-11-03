@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
 _JSON_OVERRIDES_PATH = Path(__file__).parent / "overrides.json"
 """NB: this is a composite sample and won't be internally consistent."""
-_PACKAGE_MINOR_VERSION = "0.6.x"
+_PACKAGE_MINOR_VERSION = "0.7"
 
 
 class TestSaveData:
@@ -52,7 +52,7 @@ class TestSaveData:
         assert isinstance(sd, SaveData)
         assert (
             sd.__a3_antistasi_ultimate_save_data_parser_version__.split(".")[0:2]
-            == _PACKAGE_MINOR_VERSION.split(".")[0:2]
+            == _PACKAGE_MINOR_VERSION.split(".", maxsplit=1)
         )
         assert sd.saveTime == dt.datetime(
             2026, 10, 28, 17, 31, 34, 905000, tzinfo=dt.UTC

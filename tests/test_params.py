@@ -36,9 +36,8 @@ class TestParams:
         ) - _sub_params_types.keys()
         # act
         # assert
-        assert (source_dict.keys() - set(Params._DISCARD_KEYS)) == (
-            handled_keys - set(Params._DISCARD_KEYS)
-        )
+        _discard_keys = set(Params._DISCARD_KEYS)
+        assert source_dict.keys() - _discard_keys == handled_keys - _discard_keys
 
     def test_from_dict(self, source_dict: JSONDictNode) -> None:
         """Test that `Params` can be created from sample `dict`."""
