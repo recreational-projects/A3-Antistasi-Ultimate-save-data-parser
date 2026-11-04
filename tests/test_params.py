@@ -10,18 +10,18 @@ from a3_antistasi_ultimate_save_data_parser.params import Params
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from a3_antistasi_ultimate_save_data_parser._types import JSONDictNode
+    from a3_antistasi_ultimate_save_data_parser.types import _JSONDictNode
 
 
 class TestParams:
     """Tests for `Params` class."""
 
     @pytest.fixture
-    def source_dict(self, base_sample_dict: JSONDictNode) -> JSONDictNode:
+    def source_dict(self, base_sample_dict: _JSONDictNode) -> _JSONDictNode:
         """Return sample data `dict`."""
         return base_sample_dict["params"]
 
-    def test_sample_data_keys_match_members(self, source_dict: JSONDictNode) -> None:
+    def test_sample_data_keys_match_members(self, source_dict: _JSONDictNode) -> None:
         """Test that sample data root keys match expected `Param` fields.
 
         Ignore discarded keys.
@@ -39,7 +39,7 @@ class TestParams:
         _discard_keys = set(Params._DISCARD_KEYS)
         assert source_dict.keys() - _discard_keys == handled_keys - _discard_keys
 
-    def test_from_dict(self, source_dict: JSONDictNode) -> None:
+    def test_from_dict(self, source_dict: _JSONDictNode) -> None:
         """Test that `Params` can be created from sample `dict`."""
         # arrange
         # act
@@ -54,7 +54,9 @@ class TestParams:
             )
         assert my_params.basic.gameMode == 1
 
-    def test_all_relevant_source_keys_included(self, source_dict: JSONDictNode) -> None:
+    def test_all_relevant_source_keys_included(
+        self, source_dict: _JSONDictNode
+    ) -> None:
         """Test that a Params instance includes all relevant source keys."""
         # arrange
         # act

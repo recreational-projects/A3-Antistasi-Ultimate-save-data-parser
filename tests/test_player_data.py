@@ -5,13 +5,13 @@ from typing import TYPE_CHECKING
 from a3_antistasi_ultimate_save_data_parser.player_data import PlayerData
 
 if TYPE_CHECKING:
-    from a3_antistasi_ultimate_save_data_parser._types import JSONDictNode
+    from a3_antistasi_ultimate_save_data_parser.types import _JSONDictNode
 
 
 class TestPlayer:
     """Tests for `PlayerData` class."""
 
-    def test_from_raw_dict(self, base_sample_dict: JSONDictNode) -> None:
+    def test_from_raw_dict(self, base_sample_dict: _JSONDictNode) -> None:
         """Test that `PlayerData` can be created from root of sample `dict`."""
         # arrange
         # act
@@ -21,7 +21,7 @@ class TestPlayer:
         # assert
         assert isinstance(my_player, PlayerData)
 
-    def test_dict_from_raw_dict(self, base_sample_dict: JSONDictNode) -> None:
+    def test_dict_from_raw_dict(self, base_sample_dict: _JSONDictNode) -> None:
         """Test that `PlayerData` dict can be created from root of sample `dict`."""
         # arrange
         # act
