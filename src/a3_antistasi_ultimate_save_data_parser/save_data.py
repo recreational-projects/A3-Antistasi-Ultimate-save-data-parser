@@ -8,10 +8,10 @@ from uuid import UUID
 
 import msgspec
 
-from ._types import SteamId64
 from .params import Params
 from .player_data import PlayerData
 from .position import Position, Position2D
+from .types import SteamId64
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -54,11 +54,11 @@ class SaveData(msgspec.Struct, kw_only=True):
     """Mission parameters as a `.params.Params` instance."""
     factions: list[str]
     membersX: list[SteamId64]
-    """`list` of `SteamId64`s."""
+    """`list` of `.types.SteamId64`s."""
     savedPlayers: list[SteamId64]
-    """`list` of `SteamId64`s."""
+    """`list` of `.types.SteamId64`s."""
     players: dict[SteamId64, PlayerData] = {}
-    """`dict` mapping `SteamId64` to `.player_data.PlayerData` instances.
+    """`dict` mapping `.types.SteamId64` to `.player_data.PlayerData` instances.
 
     Does not correspond directly to a source JSON key.
     """

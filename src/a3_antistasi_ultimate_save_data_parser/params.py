@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, ClassVar, Self
 import msgspec
 
 if TYPE_CHECKING:
-    from a3_antistasi_ultimate_save_data_parser._types import JSONDictNode
+    from a3_antistasi_ultimate_save_data_parser.types import _JSONDictNode
 
 
 class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
@@ -133,7 +133,7 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     # A3A_showGroupBar: bool  # removed in AU 12.3.0.0
 
     @classmethod
-    def _from_dict(cls, dict_: JSONDictNode) -> Self:
+    def _from_dict(cls, dict_: _JSONDictNode) -> Self:
         """Construct a type-validated instance from a `dict` JSON conversion."""
         sub_params: dict[str, _SubParams] = {}
         consumed_keys: set[str] = set()

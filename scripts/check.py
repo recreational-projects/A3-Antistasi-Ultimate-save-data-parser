@@ -24,9 +24,12 @@ import msgspec
 # pyrefly: ignore[missing-import]
 from rich.pretty import pprint
 
-from a3_antistasi_ultimate_save_data_parser._types import LEN_STEAM_ID64
 from a3_antistasi_ultimate_save_data_parser.params import Params
-from a3_antistasi_ultimate_save_data_parser.player_data import PlayerData
+from a3_antistasi_ultimate_save_data_parser.player_data import (
+    _SOURCE_PLAYER_FIELDS_PREFIX,
+    PlayerData,
+    _steam_id_64_from_player_data_key,
+)
 from a3_antistasi_ultimate_save_data_parser.save_data import SaveData
 
 if TYPE_CHECKING:
@@ -50,10 +53,10 @@ def main() -> None:
     )
 
     player_input_keys = {
-        k
-        for k in input_dict
-        if k.removeprefix("player_")[LEN_STEAM_ID64 + 1 :]
-        in PlayerData.__struct_fields__
+        key
+        for key in input_dict
+        if key.startswith(_SOURCE_PLAYER_FIELDS_PREFIX)
+        and _steam_id_64_from_player_data_key(key)
     }
     extra_root_input_keys = (
         _input_dict_root_keys

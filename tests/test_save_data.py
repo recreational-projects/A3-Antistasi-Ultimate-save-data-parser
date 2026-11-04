@@ -15,7 +15,7 @@ from a3_antistasi_ultimate_save_data_parser.position import Position, Position2D
 from a3_antistasi_ultimate_save_data_parser.save_data import SaveData
 
 if TYPE_CHECKING:
-    from a3_antistasi_ultimate_save_data_parser._types import JSONDictNode
+    from a3_antistasi_ultimate_save_data_parser.types import _JSONDictNode
 
 
 _JSON_OVERRIDES_PATH = Path(__file__).parent / "overrides.json"
@@ -28,7 +28,7 @@ class TestSaveData:
 
     def test_base_sample_data_contains_all_members(
         self,
-        base_sample_dict: JSONDictNode,
+        base_sample_dict: _JSONDictNode,
     ) -> None:
         """Test that sample data contains keys for all non-derived `SaveData` fields.
 
@@ -50,10 +50,9 @@ class TestSaveData:
         sd = SaveData.decode_str(base_sample_str)
         # assert
         assert isinstance(sd, SaveData)
-        assert (
-            sd.__a3_antistasi_ultimate_save_data_parser_version__.split(".")[0:2]
-            == _PACKAGE_MINOR_VERSION.split(".", maxsplit=1)
-        )
+        assert sd.__a3_antistasi_ultimate_save_data_parser_version__.split(".")[
+            0:2
+        ] == _PACKAGE_MINOR_VERSION.split(".", maxsplit=1)
         assert sd.saveTime == dt.datetime(
             2026, 10, 28, 17, 31, 34, 905000, tzinfo=dt.UTC
         )
@@ -69,7 +68,7 @@ class TestSaveData:
         assert isinstance(sd.params, Params)
 
     @pytest.fixture
-    def complex_sample_str(self, base_sample_dict: JSONDictNode) -> str:
+    def complex_sample_str(self, base_sample_dict: _JSONDictNode) -> str:
         """Return sample data `str`."""
         dict_ = base_sample_dict.copy()
         overrides = msgspec.json.decode(_JSON_OVERRIDES_PATH.read_text())
