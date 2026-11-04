@@ -27,7 +27,6 @@ from rich.pretty import pprint
 from a3_antistasi_ultimate_save_data_parser.params import Params
 from a3_antistasi_ultimate_save_data_parser.player_data import (
     _SOURCE_PLAYER_FIELDS_PREFIX,
-    PlayerData,
     _steam_id_64_from_player_data_key,
 )
 from a3_antistasi_ultimate_save_data_parser.save_data import SaveData
@@ -43,15 +42,15 @@ def main() -> None:
     file_path = _parse_input_path()
     input_str = file_path.read_text()
     input_dict = msgspec.json.decode(input_str)
-    _input_dict_root_keys = input_dict.keys()
 
-    _save_keys_intersect = _input_dict_root_keys & SaveData.__struct_fields__
+    print("\nInput JSON AU `version`:")
+    pprint(input_dict["version"])
+
     missing_root_input_keys = (
         set(SaveData.__struct_fields__)
-        - _save_keys_intersect
         - SaveData.__DERIVED_FIELDS__
+        - set(input_dict.keys())
     )
-
     player_input_keys = {
         key
         for key in input_dict
@@ -59,29 +58,29 @@ def main() -> None:
         and _steam_id_64_from_player_data_key(key)
     }
     extra_root_input_keys = (
-        _input_dict_root_keys
-        - _save_keys_intersect
-        - set(PlayerData.__struct_fields__)
-        - player_input_keys
+        set(input_dict.keys()) - set(SaveData.__struct_fields__) - player_input_keys
     )
+    print("\nSAVE_DATA:")
+    print("\n`SaveData` members missing from input root:")
+    _print_iterable(missing_root_input_keys)
+    print("\nKeys in input root not required by `SaveData`:")
+    _print_iterable(extra_root_input_keys)
 
     _sub_params_types = Params._get_sub_params_types()
     _sub_params_handled_keys = _flattened_set(
         cls_.__struct_fields__ for cls_ in _sub_params_types.values()
     )
-
     params_handled_keys = (
         set(Params.__struct_fields__)
         | set(Params._DISCARD_KEYS)
         | _sub_params_handled_keys
     ) - _sub_params_types.keys()
-
-    _params_intersect = input_dict["params"].keys() & params_handled_keys
-    missing_params_input_keys = params_handled_keys - _params_intersect
-    extra_params_input_keys = input_dict["params"].keys() - _params_intersect
-
-    print("\nInput JSON `version`:")
-    pprint(input_dict["version"])
+    missing_params_input_keys = (
+        params_handled_keys - input_dict["params"].keys() - Params._DISCARD_KEYS
+    )
+    extra_params_input_keys = (
+        input_dict["params"].keys() - params_handled_keys - player_input_keys
+    )
 
     print("\nPARAMS:")
     print("\n`Params` members missing from input `params`:")
@@ -99,13 +98,6 @@ def main() -> None:
     print("\nPLAYER_DATA:")
     print("\n`PlayerData` related keys in input root:")
     _print_iterable(player_input_keys)
-
-    print("\nSAVE_DATA:")
-    print("\n`SaveData` members missing from input root:")
-    _print_iterable(missing_root_input_keys)
-    print("\nKeys in input root not required by `SaveData`:")
-    _print_iterable(extra_root_input_keys)
-
     print("\nAttempting to decode input JSON `str` to `SaveData`:")
     try:
         SaveData.decode_str(input_str)
