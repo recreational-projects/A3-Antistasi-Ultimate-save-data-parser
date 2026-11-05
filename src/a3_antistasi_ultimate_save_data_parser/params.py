@@ -149,7 +149,11 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
         remaining_data = {
             k: dict_[k] for k in dict_ if k not in consumed_keys | cls._DISCARD_KEYS
         }
-        return msgspec.convert({**remaining_data, **sub_params}, type=cls)
+        try:
+            return msgspec.convert({**remaining_data, **sub_params}, type=cls)
+        except msgspec.ValidationError as e:
+            err_msg = f"Failed to create `{cls.__name__}` instance: {e.__class__}: {e}"
+            raise ValueError(err_msg) from e
 
     @classmethod
     def _get_sub_params_types(cls) -> dict[str, type[_SubParams]]:
@@ -165,7 +169,7 @@ class _SubParams(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     """Sub mission parameters."""
 
 
-class BasicParams(_SubParams):
+class BasicParams(_SubParams, kw_only=True):
     """Basic mission parameters."""
 
     ### ScenarioParams
@@ -197,7 +201,7 @@ class BasicParams(_SubParams):
     settingsTimeMultiplier: int
 
 
-class AIParams(_SubParams):
+class AIParams(_SubParams, kw_only=True):
     """AI and Balance mission parameters."""
 
     distanceSPWN: int
@@ -280,7 +284,7 @@ class AIParams(_SubParams):
     A3A_ultimate_lockpickKitBreakChance: int
 
 
-class BMParams(_SubParams):
+class BMParams(_SubParams, kw_only=True):
     """BlackMarket mission parameters."""
 
     disableTrader: bool
@@ -291,7 +295,7 @@ class BMParams(_SubParams):
     A3U_blackMarketDiscountWeapon: int
 
 
-class BuilderParams(_SubParams):
+class BuilderParams(_SubParams, kw_only=True):
     """Builder mission parameters."""
 
     A3A_builderPermissions: int
@@ -303,7 +307,7 @@ class BuilderParams(_SubParams):
     maxConstructions: int
 
 
-class LootParams(_SubParams):
+class LootParams(_SubParams, kw_only=True):
     """Loot mission parameters."""
 
     ### UnlockParams
@@ -350,24 +354,25 @@ class LootParams(_SubParams):
     helmetLossSound: bool
 
 
-class ExtenderParams(_SubParams):
+class ExtenderParams(_SubParams, kw_only=True):
     """Extender mission parameters."""
 
     A3UE_YourExtenderName_ParamName: object | None = None
-    # not sure where this presumably placeholder field
-    # comes from. Added in AU 12.3.0.0, or is it from an extender?
+    # not sure where this presumably placeholder field came from.
+    # Added in AU 12.3.0.0, or from an extender?
+    # Optional for compatibility.
 
 
-class ExperimentalParams(_SubParams):
+class ExperimentalParams(_SubParams, kw_only=True):
     """Experimental mission parameters."""
 
 
-class DevelopmentParams(_SubParams):
+class DevelopmentParams(_SubParams, kw_only=True):
     """Development mission parameters."""
 
     LogLevel: int
     A3A_logDebugConsole: int
 
 
-class DeprecatedParams(_SubParams):
+class DeprecatedParams(_SubParams, kw_only=True):
     """Deprecated mission parameters."""
