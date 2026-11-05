@@ -3,14 +3,14 @@
 Python library to parse [Antistasi Ultimate ('AU')](https://antistasiultimate.com/) save data that's been exported from the game as JSON.
 This feature was added in AU v12.2.0.0 (released for public testing only).
 
-Experimental/alpha. Only tested with output from AU v12.3.0.0 (released for public testing only).
+Experimental/alpha. Only tested with output from AU v12.4.0.0 (released for public testing only).
 
 * Outputs Python [`msgspec.Struct`](https://msgspec.dev/) classes, validating all data types
-* Datetime values are parsed as Python `datetime.datetime` built-in objects
-* Position values are parsed as a `Position` class with `x`, `y`, `z` fields, where possible
 * `params` is parsed as a hierarchical `Params` class
-* SteamId64s are converted to `int`
+* SteamId64s are converted to `int` and validated as 17 digit
 * players' data is parsed to `SaveData.players`, a `dict` mapping SteamId64: `PlayerData` class
+* Datetime values are parsed as Python `datetime.datetime` built-in objects
+* Position values are parsed as `Position`, `Position2D` classes where feasible
 
 
 ## Installing

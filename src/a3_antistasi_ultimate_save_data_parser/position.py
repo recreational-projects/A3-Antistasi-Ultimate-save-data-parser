@@ -16,8 +16,11 @@ class Position(
 ):
     """A 3D position in the world.
 
-    Source JSON doesn't identify variants with differing datums
-    like PositionASL, Position ATL, PositionAGL.
+    +`x` North, +`y` East, +`z` up in meters.
+
+    Can be considered a generalization of Arma 3's 'Position' -
+    source JSON doesn't identify variants with differing `z` datums
+    like 'PositionASL', 'Position ATL', 'PositionAGL'.
     """
 
     x: float
@@ -33,7 +36,10 @@ class Position(
 class Position2D(
     msgspec.Struct, array_like=True, forbid_unknown_fields=True, kw_only=True
 ):
-    """A 2D position in the world."""
+    """A 2D position in the world, corresponding to Arma 3's 'Position2D'.
+
+    +`x` North, +`y` East in meters.
+    """
 
     x: float
     y: float
