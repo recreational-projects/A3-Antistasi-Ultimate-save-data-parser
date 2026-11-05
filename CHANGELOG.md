@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project tries to adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.8.0] - 2026-11-05
+
+### Added
+
+* support AU 12.4.0.0 (adds `SaveData.params.bm.A3A_ultimate_disableBazaar`)
+* improve `Params` validation and error message
+* validate `SteamID64` as 17 digits
+* make `types` module public
+* docs: improved documentation
+* ci: also run on Python 3.14
+
+### Fixed
+
+* `scripts/check.py` didn't reflect code changes
+
+
 ## [0.7.0] - 2026-11-03
 
 ### Added
@@ -99,6 +115,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 Initial documented version
 
 
+[0.8.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.7.0..v0.8.0
 [0.7.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.6.0..v0.7.0
 [0.6.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.5.0..v0.6.0
 [0.5.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.4.0..v0.5.0
