@@ -61,7 +61,13 @@ class TestSaveData:
         assert isinstance(sd.savedPlayers[0], int)
         assert isinstance(sd.players[12345678901234567], PlayerData)
         assert sd.dateX == dt.datetime(2035, 6, 10, 10, 26, tzinfo=None)
-        assert _posHQ_conforms_to_type(sd.posHQ)
+        assert isinstance(sd.posHQ, list)
+        for i in sd.posHQ:
+            if isinstance(i, tuple):
+                isinstance(i[0], float) and isinstance(i[1], Position)
+            else:
+                assert isinstance(i, Position)
+
         assert sd.aggressionOccupants == [1, []]
         assert sd.traderPosition is None
         assert _A3A_fuelAmountleftArray_conforms_to_type(sd.A3A_fuelAmountleftArray)
@@ -97,18 +103,5 @@ def _A3A_fuelAmountleftArray_conforms_to_type(
             all(isinstance(item, tuple) for item in value),
             all(isinstance(item[0], Position) for item in value),
             all(isinstance(item[1], float) for item in value),
-        )
-    )
-
-
-def _posHQ_conforms_to_type(value: list[tuple[float, Position] | Position]) -> bool:
-    return all(
-        (
-            isinstance(value, list),
-            all(isinstance(item, (tuple | Position)) for item in value),
-            all(
-                isinstance(item[0], float) and isinstance(item[1], Position)
-                for item in [i for i in value if isinstance(i, tuple)]
-            ),
         )
     )
