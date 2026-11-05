@@ -1,4 +1,4 @@
-name: Python application with uv
+name: Python 3.x library with uv on Ubuntu and Windows
 
 on:
   push:
@@ -14,6 +14,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest ]
+        python-version: [ "3.14", "3.15" ]
 
     runs-on: ${{ matrix.os }}
 
@@ -25,13 +26,13 @@ jobs:
       # Action version does not determine which uv version to install
       uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
 
-    - name: Setup Python
+    - name: Setup Python ${{ matrix.python-version }}
       # Faster than using uv, as it caches Python on GitHub runner
       uses: actions/setup-python@v7.1.0
       with:
-        python-version-file: ".python-version"
+        python-version: ${{ matrix.python-version }}
 
-    - name: Install the project
+    - name: Sync the project, asserting lockfile is up-to-date
       run: uv sync --locked
 
     - name: Lint with ruff
