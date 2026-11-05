@@ -13,4 +13,4 @@ wheels/
 .idea
 
 # Project specific
-.sample_data
+sample_data/

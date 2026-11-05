@@ -288,6 +288,10 @@ class BMParams(_SubParams, kw_only=True):
     """BlackMarket mission parameters."""
 
     disableTrader: bool
+    A3A_ultimate_disableBazaar: bool | None = None
+    # Added in AU 12.4.0.0. Not actually part of BMParams, but an addon.
+    # Ref: https://github.com/Antistasi-Ultimate-Community/A3-Antistasi-Ultimate/blob/unstable/A3A/addons/bazaar/Params.hpp
+    # Optional for compatibility.
     A3A_ultimate_trader_selling_sellPriceMultiplier: int
     vanillaArmsDealer: bool
     blackMarketIgnoreRequirements: bool
