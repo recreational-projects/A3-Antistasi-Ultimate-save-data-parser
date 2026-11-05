@@ -46,7 +46,7 @@ class SaveData(msgspec.Struct, kw_only=True):
     # Key metadata:
     name: str  # including empty ""
     saveTime: dt.datetime
-    """UTC timestamp of the save."""
+    """UTC timestamp of the save. Millisecond precision."""
     serverID: str | Literal[False]
     campaignID: UUID
     version: str
@@ -125,6 +125,8 @@ class SaveData(msgspec.Struct, kw_only=True):
     tasks: list[object]
     bombRuns: int
     wurzelGarrison: list[list[str | list[object]]]
+    """Where `str` is a marker name e.g. `'outpost_49'`
+    or town name, e.g. `'Agios Dionysios'`."""
     supportPoints: int
     antennas: list[Position]  # including empty []
     killZones: list[list[str | list[object]]]
