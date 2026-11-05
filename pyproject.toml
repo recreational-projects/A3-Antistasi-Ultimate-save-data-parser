@@ -25,10 +25,10 @@ build-backend = "uv_build"
 [dependency-groups]
 dev = [
     "pdoc==16.0.0",
-    "pyrefly==1.4.0",
+    "pyrefly==1.4.1",
     "pytest==9.2.0",
     "ruff==0.17.3",
-    "ty==0.0.95",
+    "ty==0.0.97",
 ]
 
 [tool.pyrefly]

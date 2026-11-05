@@ -2318,7 +2318,7 @@
     ]
   ],
   "serverID": false,
-  "version": "12.3.0.0",
+  "version": "12.4.0.0",
   "chopForest": false,
   "rivalsExcludedLocations": {},
   "watchpostsFIA": [],
@@ -2539,7 +2539,8 @@
     "A3A_reviveTime": 16,
     "rallyPointSpawnCount": 0,
     "allowFuturisticUnfairSupports": false,
-    "blackMarketIgnoreRequirements": true,
+    "blackMarketIgnoreRequirements": false,
+    "A3A_ultimate_disableBazaar": false,
     "AllParams": 0,
     "CrateParams": 0,
     "gameMode": 1,
