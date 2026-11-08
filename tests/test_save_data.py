@@ -12,7 +12,7 @@ import pytest
 from a3_antistasi_ultimate_save_data_parser.params import Params
 from a3_antistasi_ultimate_save_data_parser.player_data import PlayerData
 from a3_antistasi_ultimate_save_data_parser.position import Position, Position2D
-from a3_antistasi_ultimate_save_data_parser.save_data import SaveData
+from a3_antistasi_ultimate_save_data_parser.save_data import PosHQ, SaveData
 
 if TYPE_CHECKING:
     from a3_antistasi_ultimate_save_data_parser.types import _JSONDictNode
@@ -61,13 +61,7 @@ class TestSaveData:
         assert isinstance(sd.savedPlayers[0], int)
         assert isinstance(sd.players[12345678901234567], PlayerData)
         assert sd.dateX == dt.datetime(2035, 6, 10, 10, 26, tzinfo=None)
-        assert isinstance(sd.posHQ, list)
-        for i in sd.posHQ:
-            if isinstance(i, tuple):
-                isinstance(i[0], float) and isinstance(i[1], Position)
-            else:
-                assert isinstance(i, Position)
-
+        assert isinstance(sd.posHQ, PosHQ)
         assert sd.aggressionOccupants == [1, []]
         assert sd.traderPosition is None
         assert _A3A_fuelAmountleftArray_conforms_to_type(sd.A3A_fuelAmountleftArray)

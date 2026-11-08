@@ -3,7 +3,7 @@
 import datetime as dt
 import importlib.metadata
 from collections.abc import Sequence
-from typing import TYPE_CHECKING, Any, ClassVar, Literal
+from typing import TYPE_CHECKING, ClassVar, Literal
 from uuid import UUID
 
 import msgspec
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 _PACKAGE_VERSION = importlib.metadata.version("a3_antistasi_ultimate_save_data_parser")
 
 
-type _RawPosition = Sequence[float]
+type _RawPosition = Sequence[float | int]
 
 
 class SaveData(msgspec.Struct, kw_only=True):
@@ -76,11 +76,8 @@ class SaveData(msgspec.Struct, kw_only=True):
     randomizeRebelLoadoutUniforms: bool
     petrosPosition: Position
     unlockedVehicleTypes: list[str]  # e.g. ["Unarmed Cars", "Armed Cars"]
-    posHQ: list[tuple[float, Any] | Any]
-    """Actual type is `list[tuple[float, .position.Position] | .position.Position]`."""
-    # msgspec doesn't allow more complex type union expressions
-    # e.g. can't use more than one array-like, such as _RawPosition/list/tuple
-    # this forces parsing to positions later
+    posHQ: PosHQ
+    """`Position` and heading of HQ objects as a `PosHQ` instance."""
     watchpostsFIA: list[tuple[Position, list[str]]]  # including empty []
     roadblocksFIA: list[tuple[Position, list[str]]]  # including empty []
     hmgpostsFIA: list[tuple[Position, list[str]]]  # including empty []
@@ -161,12 +158,29 @@ class SaveData(msgspec.Struct, kw_only=True):
                 "membersX": _convert_iterable_str_to_int(raw["membersX"]),
                 "savedPlayers": _convert_iterable_str_to_int(raw["savedPlayers"]),
                 "traderPosition": _convert_traderPosition(raw["traderPosition"]),
-                "posHQ": _convert_posHQ(raw["posHQ"]),
+                "posHQ": msgspec.convert(raw["posHQ"], type=PosHQ),
                 "players": PlayerData._dict_from_raw_dict(raw),
                 "params": Params._from_dict(raw["params"]),
             },
         )
         return msgspec.convert(raw, type=cls)  # this does re-validate some data
+
+
+class PosHQ(msgspec.Struct, array_like=True, kw_only=True, forbid_unknown_fields=True):
+    """`Position` and heading of HQ objects.
+
+    Corresponds to source JSON `posHQ` field.
+    """
+
+    posHQ: Position
+    """Position of HQ marker (to be confirmed)."""
+    boxX: tuple[float, Position]
+    """Where `float` is a heading."""
+    mapX: tuple[float, Position]
+    """Where `float` is a heading."""
+    flagX: Position
+    vehicleBox: tuple[float, Position]
+    """Where `float` is a heading."""
 
 
 def _convert_saveTime(
@@ -188,7 +202,7 @@ def _convert_traderPosition(value: Sequence[float]) -> Position2D | None:
         return None
 
     if _is_raw_position2D(value):
-        return Position2D._from_raw_position_array(value)
+        return Position2D._from_raw_position_seq(value)
 
     err_msg = (
         f"Can't convert `traderPosition` value: "
@@ -198,43 +212,9 @@ def _convert_traderPosition(value: Sequence[float]) -> Position2D | None:
     raise TypeError(err_msg)
 
 
-def _convert_posHQ(
-    value: Iterable[tuple],
-) -> list[tuple[float, Position] | Position]:
-    output: list[tuple[float, Position] | Position] = []
-    for item in value:
-        if _is_raw_position(item):
-            output.append(Position._from_raw_position_array(item))
-
-        elif (
-            isinstance(item, Sequence)
-            and isinstance(item[0], float)
-            and _is_raw_position(item[1])
-        ):
-            output.append((item[0], Position._from_raw_position_array(item[1])))
-
-        else:
-            err_msg = (
-                f"Can't convert `posHQ` array item: "
-                f"'{item}' of type '{type(item)}'. "
-                f"Expected `{_RawPosition}` or `tuple[float, _RawPosition]`."
-            )
-            raise TypeError(err_msg)
-
-    return output
-
-
 def _convert_iterable_str_to_int(value: Iterable[str]) -> list[int]:
     """Convert an iterable of `str`s to list of `int`s`."""
     return [int(x) for x in value]
-
-
-def _is_raw_position(value: object) -> bool:
-    return (
-        isinstance(value, Sequence)
-        and len(value) == 3  # noqa: PLR2004
-        and all(isinstance(x, float | int) for x in value)
-    )
 
 
 def _is_raw_position2D(value: object) -> bool:
