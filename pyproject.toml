@@ -1,6 +1,6 @@
 [project]
 name = "a3-antistasi-ultimate-save-data-parser"
-version = "0.8.0"
+version = "0.9.0"
 description = "Parse Antistasi Ultimate JSON save data"
 readme = "README.md"
 authors = [
@@ -27,8 +27,7 @@ dev = [
     "pdoc==16.0.0",
     "pyrefly==1.4.1",
     "pytest==9.2.0",
-    "ruff==0.17.3",
-    "ty==0.0.97",
+    "ruff==0.17.4",
 ]
 
 [tool.pyrefly]

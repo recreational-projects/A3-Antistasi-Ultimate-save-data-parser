@@ -18,13 +18,13 @@ Experimental/alpha. Only tested with output from AU v12.4.0.0 (released for publ
 From GitHub, specifying a version via tag, e.g:
 
 ```shell
-uv add git+https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser --tag v0.7.0
+uv add git+https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser --tag v0.9.0
 ```
 
 or with `pip`:
 
 ```shell
-pip install git+https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser@v0.7.0
+pip install git+https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser@v0.9.0
 ```
 
 
