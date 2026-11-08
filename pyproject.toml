@@ -47,11 +47,15 @@ ignore = [
     "D203",  # incorrect-blank-line-before-class
     "D213",  # multi-line-summary-second-line
     # Other:
-    "N802",  # invalid-function-name: keep refs to member names formatted as source
-    "N806",  # non-lowercase-variable-in-function: keep refs to member names formatted as source
     "CPY001",  # missing-copyright-notice
     "DTZ001",  # call-datetime-without-tzinfo
     "ERA001",  # commented-out-code
+    "FIX002",
+    "N802",  # invalid-function-name: keep refs to member names formatted as source
+    "N806",  # non-lowercase-variable-in-function: keep refs to member names formatted as source
+    "TD002",
+    "TD003",
+
 ]
 extend-safe-fixes = [
 #    "TC",  # flake8-type-checking

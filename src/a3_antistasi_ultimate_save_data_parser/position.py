@@ -29,7 +29,11 @@ class Position(
     """Height/altitude relative to a datum."""
 
     @classmethod
-    def _from_raw_position_array(cls, value: Sequence[float | int]) -> Self:
+    def _from_raw_position_seq(cls, value: Sequence[float | int]) -> Self:
+        if len(value) != 3:  # noqa: PLR2004
+            err_msg = f"Expected `Sequence` of length 3, got {value}."
+            raise TypeError(err_msg)
+
         return cls(x=value[0], y=value[1], z=value[2])
 
 
@@ -45,5 +49,9 @@ class Position2D(
     y: float
 
     @classmethod
-    def _from_raw_position_array(cls, value: Sequence[float | int]) -> Self:
+    def _from_raw_position_seq(cls, value: Sequence[float | int]) -> Self:
+        if len(value) != 2:  # noqa: PLR2004
+            err_msg = f"Expected `Sequence` of length 2, got {value}."
+            raise TypeError(err_msg)
+
         return cls(x=value[0], y=value[1])
