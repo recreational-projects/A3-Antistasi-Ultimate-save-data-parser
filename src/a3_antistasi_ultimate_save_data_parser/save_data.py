@@ -94,7 +94,8 @@ class SaveData(msgspec.Struct, kw_only=True):
     rivalsExcludedLocations: dict[str, object]  # including empty {}
     nextRivalsLocationReveal: float
     mrkSDK: list[str]  # marker names inc. "SyndHQ"
-    controlsSDK: list[str]  # marker names
+    controlsSDK: list[str]
+    """List of marker names."""
     inactivityRivals: tuple[int, list[list[float]]]
 
     # Occupants and Invaders:
@@ -104,7 +105,8 @@ class SaveData(msgspec.Struct, kw_only=True):
     invaderRadioKeys: int
     aggressionOccupants: list[object]  # observed patterns:  [1,[]]
     enemyResources: tuple[float, float, float, float]
-    mrkCSAT: list[str]  # marker names
+    mrkCSAT: list[str]
+    """List of marker/town names."""
     prestigeOPFOR: list[float]  # variable length
 
     # Trader:
@@ -121,12 +123,13 @@ class SaveData(msgspec.Struct, kw_only=True):
     # [[Position, 1] ...]
     tasks: list[object]
     bombRuns: int
+    usesWurzelGarrison: bool
     wurzelGarrison: list[list[str | list[object]]]
-    """Where `str` is a marker name e.g. `'outpost_49'`
-    or town name, e.g. `'Agios Dionysios'`."""
+    """Where `str` is a marker/town name."""
     supportPoints: int
     antennas: list[Position]  # including empty []
     killZones: list[list[str | list[object]]]
+    """Where `str` is a marker name."""
     gameMode: int
     minesX: list[list[object]]
     destroyedBuildings: list[Position]  # including empty []
@@ -137,7 +140,6 @@ class SaveData(msgspec.Struct, kw_only=True):
     revealedZones: list[str]
     HR_Garage: list[object]
     jna_dataList: list[list[object]]
-    usesWurzelGarrison: bool
     staticsX: list[list[object]]
     prestigeBLUFOR: list[float]
     aggressionInvaders: list[object]
