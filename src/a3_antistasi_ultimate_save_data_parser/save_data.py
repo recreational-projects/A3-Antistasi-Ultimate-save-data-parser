@@ -115,7 +115,7 @@ class SaveData(msgspec.Struct, kw_only=True):
     traderDiscount: int
 
     # Other / TODO:
-    DLC: list[int] = []
+    DLC: list[str] = []
     HQKnowledge: list[object]  # observed pattern: [float, float, [], []]
     A3A_fuelAmountleftArray: list[tuple[Position, float]]
     # observed patterns:
