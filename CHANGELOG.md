@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project tries to adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.10.0] - 2026-11-11
+
+### Added
+
+* `SaveData.from_json_file()`
+* Ignore `A3UE_YourExtenderName_ParamName` param and related non-data params: 
+  probably placeholders introduced by an in-development A3U extender
+
+### Changed
+
+* `SaveData.decode_str()` renamed to `SaveData.from_json_str()`
+* docs: improved documentation
+* tests: base JSON test data is now from AU 12.4.1 default game
+
+
 ## [0.9.1] - 2026-11-10
 
 ### Fixed
@@ -130,6 +145,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 Initial documented version
 
 
+[0.10.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.9.1..v0.10.0
 [0.9.1]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.9.0..v0.9.1
 [0.9.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.8.0..v0.9.0
 [0.8.0]: https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/compare/v0.7.0..v0.8.0
