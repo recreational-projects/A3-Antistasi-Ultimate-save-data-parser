@@ -43,8 +43,16 @@ class TestSaveData:
             save_data_field_names - SaveData.__DERIVED_FIELDS__
         )
 
-    def test_decode_base_sample_str(self, base_sample_str: str) -> None:
-        """Test `SaveData.decode_str`."""
+    def test_from_json_file(self, base_sample_path: Path) -> None:
+        """Test `SaveData.from_json_file()`."""
+        # arrange
+        # act
+        sd = SaveData.from_json_file(base_sample_path)
+        # assert
+        assert isinstance(sd, SaveData)
+
+    def test_from_json_str(self, base_sample_str: str) -> None:
+        """Test `SaveData.from_json_str()`."""
         # arrange
         # act
         sd = SaveData.from_json_str(base_sample_str)

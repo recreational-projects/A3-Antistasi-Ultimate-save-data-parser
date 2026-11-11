@@ -14,6 +14,12 @@ _JSON_BASE_SAMPLE_PATH = Path(__file__).parent / "base_sample.json"
 
 
 @pytest.fixture
+def base_sample_path() -> Path:
+    """Return sample data `str`."""
+    return _JSON_BASE_SAMPLE_PATH
+
+
+@pytest.fixture
 def base_sample_str() -> str:
     """Return sample data `str`."""
     return _JSON_BASE_SAMPLE_PATH.read_text()

@@ -43,10 +43,7 @@ from a3_antistasi_ultimate_save_data_parser.save_data import SaveData
 
 BASE_PATH = Path(__file__).parent
 
-
-with (BASE_PATH / "sample.json").open() as file:
-    save_data_obj = SaveData.from_json_str(file.read())
-
+save_data_obj = SaveData.from_json_file(BASE_PATH / "sample.json")
 print("\nSOURCE JSON -> SAVEDATA OBJECT")
 rprint(save_data_obj)
 print("\nSAVEDATA OBJECT -> JSON")
