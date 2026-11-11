@@ -58,8 +58,6 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
         # extender:
         "ExtenderParams",
         "ExtenderParamsSpacer",
-        "YourExtenderNameSpacer",
-        "YourExtenderNameParams",
         # experimental:
         "ExperimentalParams",
         "ExperimentalParamsSpacer",
@@ -71,8 +69,9 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
         "DeprecatedParamsSpacer",
         # removed:
         "A3A_showGroupBar",
-        # Removed in A3U 12.3.0.0.
-        # May appear in new exports made from A3U 12.2.0.0 saves
+        # Removed in A3U 12.3.0.0
+        # May appear in new exports made from A3U >= 12.2.0.0 saves,
+        # but not supported by this library.
     }
 
     basic: BasicParams
@@ -130,7 +129,6 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     but reflects AU source code structure.
     """
     A3A_flagGarageBlock: int
-    # A3A_showGroupBar: bool  # removed in AU 12.3.0.0
 
     @classmethod
     def _from_dict(cls, dict_: _JSONDictNode) -> Self:
@@ -289,7 +287,7 @@ class BMParams(_SubParams, kw_only=True):
 
     disableTrader: bool
     A3A_ultimate_disableBazaar: bool | None = None
-    # Added in AU 12.4.0.0. Not actually part of BMParams, but an addon.
+    # Added in AU 12.4.0.0. Not structurally part of BMParams, but an addon.
     # Ref: https://github.com/Antistasi-Ultimate-Community/A3-Antistasi-Ultimate/blob/unstable/A3A/addons/bazaar/Params.hpp
     # Optional for compatibility.
     A3A_ultimate_trader_selling_sellPriceMultiplier: int
@@ -359,16 +357,21 @@ class LootParams(_SubParams, kw_only=True):
 
 
 class ExtenderParams(_SubParams, kw_only=True):
-    """Extender mission parameters."""
+    """Extender mission parameters.
 
-    A3UE_YourExtenderName_ParamName: object | None = None
-    # not sure where this presumably placeholder field came from.
-    # Added in AU 12.3.0.0, or from an extender?
-    # Optional for compatibility.
+    No members at present.
+    """
+
+    # A3UE_YourExtenderName_ParamName: object | None = None
+    # Probably came from placeholder code in an in-development extender?
+    # Describes expected format.
 
 
 class ExperimentalParams(_SubParams, kw_only=True):
-    """Experimental mission parameters."""
+    """Experimental mission parameters.
+
+    No members at present.
+    """
 
 
 class DevelopmentParams(_SubParams, kw_only=True):
@@ -379,4 +382,7 @@ class DevelopmentParams(_SubParams, kw_only=True):
 
 
 class DeprecatedParams(_SubParams, kw_only=True):
-    """Deprecated mission parameters."""
+    """Deprecated mission parameters.
+
+    No members at present.
+    """
