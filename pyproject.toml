@@ -1,6 +1,6 @@
 [project]
 name = "a3-antistasi-ultimate-save-data-parser"
-version = "0.9.1"
+version = "0.10.0"
 description = "Parse Antistasi Ultimate JSON save data"
 readme = "README.md"
 authors = [
