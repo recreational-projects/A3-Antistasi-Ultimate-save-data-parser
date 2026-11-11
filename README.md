@@ -1,16 +1,17 @@
 # A3-Antistasi-Ultimate-save-data-parser
 
 Python library to parse [Antistasi Ultimate ('AU')](https://antistasiultimate.com/) save data that's been exported from the game as JSON.
-This feature was added in AU v12.2.0.0 (released for public testing only).
+This feature was added in AU v12.2.0 (public testing release).
 
-Experimental/alpha. Only tested with output from AU v12.4.0.0 (released for public testing only).
+Pre-release/beta.
 
-* Outputs Python [`msgspec.Struct`](https://msgspec.dev/) classes, validating all data types
+* Designed to work with JSON from any AU >= 12.2.0 game
+* Outputs [`msgspec.Struct`](https://msgspec.dev/) class instances, validating all data types
 * `params` is parsed as a hierarchical `Params` class
 * SteamId64s are converted to `int` and validated as 17 digit
 * players' data is parsed to `SaveData.players`, a `dict` mapping SteamId64: `PlayerData` class
 * Datetime values are parsed as Python `datetime.datetime` built-in objects
-* Position values are parsed as `Position`, `Position2D` classes where feasible
+* Position values are parsed as `Position` or `Position2D` classes where feasible
 
 
 ## Installing
@@ -44,7 +45,7 @@ BASE_PATH = Path(__file__).parent
 
 
 with (BASE_PATH / "sample.json").open() as file:
-    save_data_obj = SaveData.decode_str(file.read())
+    save_data_obj = SaveData.from_json_str(file.read())
 
 print("\nSOURCE JSON -> SAVEDATA OBJECT")
 rprint(save_data_obj)

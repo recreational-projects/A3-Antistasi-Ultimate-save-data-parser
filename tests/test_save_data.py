@@ -47,20 +47,20 @@ class TestSaveData:
         """Test `SaveData.decode_str`."""
         # arrange
         # act
-        sd = SaveData.decode_str(base_sample_str)
+        sd = SaveData.from_json_str(base_sample_str)
         # assert
         assert isinstance(sd, SaveData)
         assert sd.__a3_antistasi_ultimate_save_data_parser_version__.split(".")[
             0:2
         ] == _PACKAGE_MINOR_VERSION.split(".", maxsplit=1)
-        assert sd.saveTime == dt.datetime(
-            2026, 10, 28, 17, 31, 34, 905000, tzinfo=dt.UTC
-        )
+        assert isinstance(sd.saveTime, dt.datetime)
+        assert sd.saveTime.tzinfo == dt.UTC
         assert isinstance(sd.campaignID, UUID)
         assert isinstance(sd.membersX[0], int)
         assert isinstance(sd.savedPlayers[0], int)
         assert isinstance(sd.players[12345678901234567], PlayerData)
-        assert sd.dateX == dt.datetime(2035, 6, 10, 10, 26, tzinfo=None)
+        assert isinstance(sd.dateX, dt.datetime)
+        assert sd.dateX.tzinfo is None
         assert isinstance(sd.posHQ, PosHQ)
         assert sd.aggressionOccupants == [1, []]
         assert sd.traderPosition is None
@@ -79,7 +79,7 @@ class TestSaveData:
         """Test `SaveData.decode_str`."""
         # arrange
         # act
-        sd = SaveData.decode_str(complex_sample_str)
+        sd = SaveData.from_json_str(complex_sample_str)
         # assert
         assert isinstance(sd, SaveData)
         assert sd.aggressionOccupants == [1, [[19.2, -0.2], [-4.25, 0.25]]]

@@ -39,8 +39,12 @@ PROJECT_ROOT = Path(__file__).parent.parent
 
 def main() -> None:
     """Check that the input JSON file contains all the required fields."""
-    file_path = _parse_input_path()
-    input_str = file_path.read_text()
+    path = _parse_input_path()
+    if not path.is_file():
+        err_msg = f"Input path '{path}' is not a file."
+        raise ValueError(err_msg)
+
+    input_str = path.read_text()
     input_dict = msgspec.json.decode(input_str)
 
     print("\nInput JSON AU `version`:")
@@ -100,7 +104,7 @@ def main() -> None:
     _print_iterable(player_input_keys)
     print("\nAttempting to decode input JSON `str` to `SaveData`:")
     try:
-        SaveData.decode_str(input_str)
+        SaveData.from_json_str(input_str)
         print("OK")
     except TypeError as e:
         pprint(e)

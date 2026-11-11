@@ -25,17 +25,40 @@ type _RawPosition = Sequence[float | int]
 class SaveData(msgspec.Struct, kw_only=True):
     """Provides an interface for Antistasi Ultimate JSON save data.
 
+    Adds structure and context.
+
     All field names correspond to source JSON keys (unless noted),
     so don't conform to conventional Python 'PEP8' naming patterns.
 
     Descriptors: https://github.com/Antistasi-Ultimate-Community/A3-Antistasi-Ultimate/blob/unstable/A3A/addons/core/functions/init/fn_initServer.sqf
     """
 
+    @classmethod
+    def from_json_str(cls, json_str: str) -> SaveData:
+        """Create a `SaveData` instance from a JSON string."""
+        raw = msgspec.json.decode(json_str)  # naive conversion to Python builtins
+        raw.update(
+            {
+                "__a3_antistasi_ultimate_save_data_parser_version__": _PACKAGE_VERSION,
+                "saveTime": _convert_saveTime(raw["saveTime"]),
+                "dateX": _convert_dateX(raw["dateX"]),
+                "membersX": _convert_iterable_str_to_int(raw["membersX"]),
+                "savedPlayers": _convert_iterable_str_to_int(raw["savedPlayers"]),
+                "traderPosition": _convert_traderPosition(raw["traderPosition"]),
+                "posHQ": msgspec.convert(raw["posHQ"], type=PosHQ),
+                "players": PlayerData._dict_from_raw_dict(raw),
+                "params": Params._from_dict(raw["params"]),
+            },
+        )
+        return msgspec.convert(raw, type=cls)  # this does re-validate some data
+
     __DERIVED_FIELDS__: ClassVar[set[str]] = {
         "__a3_antistasi_ultimate_save_data_parser_version__",
         "players",
     }
-    """@public Fields that are derived during parsing, so will never be in input."""
+    """@public Fields that are derived during parsing, so will never be in input.
+
+    Does not correspond to a source JSON key."""
 
     __a3_antistasi_ultimate_save_data_parser_version__: str
     """@public The version of this library used to parse the JSON data.
@@ -46,7 +69,7 @@ class SaveData(msgspec.Struct, kw_only=True):
     # Key metadata:
     name: str  # including empty ""
     saveTime: dt.datetime
-    """UTC timestamp of the save. Millisecond precision."""
+    """UTC timestamp of the save, with millisecond precision."""
     serverID: str | Literal[False]
     campaignID: UUID
     version: str
@@ -66,7 +89,7 @@ class SaveData(msgspec.Struct, kw_only=True):
     # World:
     map: str  # e.g. "Altis"
     dateX: dt.datetime
-    """Geographic time within the mission with minutes precision. No timezone."""
+    """Geographic time within the mission, with minutes precision. No timezone."""
     weather: list[object]
 
     # Rebel faction:
@@ -147,25 +170,6 @@ class SaveData(msgspec.Struct, kw_only=True):
     saveDataPlugins: dict[object, object]
     addonVics: list[object]
     garrison: list[list[object]]
-
-    @classmethod
-    def decode_str(cls, json_str: str) -> SaveData:
-        """Decode a JSON string into a `SaveData` instance."""
-        raw = msgspec.json.decode(json_str)  # naive conversion to Python builtins
-        raw.update(
-            {
-                "__a3_antistasi_ultimate_save_data_parser_version__": _PACKAGE_VERSION,
-                "saveTime": _convert_saveTime(raw["saveTime"]),
-                "dateX": _convert_dateX(raw["dateX"]),
-                "membersX": _convert_iterable_str_to_int(raw["membersX"]),
-                "savedPlayers": _convert_iterable_str_to_int(raw["savedPlayers"]),
-                "traderPosition": _convert_traderPosition(raw["traderPosition"]),
-                "posHQ": msgspec.convert(raw["posHQ"], type=PosHQ),
-                "players": PlayerData._dict_from_raw_dict(raw),
-                "params": Params._from_dict(raw["params"]),
-            },
-        )
-        return msgspec.convert(raw, type=cls)  # this does re-validate some data
 
 
 class PosHQ(msgspec.Struct, array_like=True, kw_only=True, forbid_unknown_fields=True):
