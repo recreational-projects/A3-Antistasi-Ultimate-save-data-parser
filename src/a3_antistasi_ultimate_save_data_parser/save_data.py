@@ -3,7 +3,8 @@
 import datetime as dt
 import importlib.metadata
 from collections.abc import Sequence
-from typing import TYPE_CHECKING, ClassVar, Literal
+from pathlib import Path  # noqa: TC003 pdoc needs this for `SaveData.from_json_file()`
+from typing import TYPE_CHECKING, ClassVar, Literal, Self
 from uuid import UUID
 
 import msgspec
@@ -15,6 +16,7 @@ from .types import SteamId64
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
+
 
 _PACKAGE_VERSION = importlib.metadata.version("a3_antistasi_ultimate_save_data_parser")
 
@@ -34,7 +36,13 @@ class SaveData(msgspec.Struct, kw_only=True):
     """
 
     @classmethod
-    def from_json_str(cls, json_str: str) -> SaveData:
+    def from_json_file(cls, path: Path) -> Self:
+        """Create a `SaveData` instance from a JSON string."""
+        with path.open() as file:
+            return cls.from_json_str(file.read())
+
+    @classmethod
+    def from_json_str(cls, json_str: str) -> Self:
         """Create a `SaveData` instance from a JSON string."""
         raw = msgspec.json.decode(json_str)  # naive conversion to Python builtins
         raw.update(

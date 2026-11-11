@@ -8,7 +8,8 @@ that's been exported from the game as JSON.
 
 Introduction in [README.md](https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/blob/main/README.md).
 
-# Main entry point
+# Main entry points
 
+* `a3_antistasi_ultimate_save_data_parser.save_data.SaveData.from_json_file()`.
 * `a3_antistasi_ultimate_save_data_parser.save_data.SaveData.from_json_str()`.
 """  # noqa: D205, D400, D415
