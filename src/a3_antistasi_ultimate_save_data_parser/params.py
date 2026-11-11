@@ -72,6 +72,10 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
         # Removed in A3U 12.3.0.0
         # May appear in new exports made from A3U >= 12.2.0.0 saves,
         # but not supported by this library.
+        "YourExtenderNameSpacer",
+        "YourExtenderNameParams",
+        "A3UE_YourExtenderName_ParamName",
+        # Explicitly discard these placeholders, probably from in-development extender
     }
 
     basic: BasicParams
