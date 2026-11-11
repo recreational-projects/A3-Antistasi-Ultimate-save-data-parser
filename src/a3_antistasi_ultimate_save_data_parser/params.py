@@ -137,7 +137,7 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     @classmethod
     def _from_dict(cls, dict_: _JSONDictNode) -> Self:
         """Construct a type-validated instance from a `dict` JSON conversion."""
-        sub_params: dict[str, _SubParams] = {}
+        sub_params: dict[str, ParamsCategory] = {}
         consumed_keys: set[str] = set()
         for param_field_name, sub_param_type in cls._get_sub_params_types().items():
             _sub_param_data = {
@@ -158,20 +158,20 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
             raise ValueError(err_msg) from e
 
     @classmethod
-    def _get_sub_params_types(cls) -> dict[str, type[_SubParams]]:
+    def _get_sub_params_types(cls) -> dict[str, type[ParamsCategory]]:
         """Get a `dict` mapping sub parameter names to types, via introspection."""
         return {
             m.name: m.type
             for m in msgspec.structs.fields(cls)
-            if issubclass(m.type, _SubParams)
+            if issubclass(m.type, ParamsCategory)
         }
 
 
-class _SubParams(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
-    """Sub mission parameters."""
+class ParamsCategory(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
+    """Base class for mission parameter categories."""
 
 
-class BasicParams(_SubParams, kw_only=True):
+class BasicParams(ParamsCategory, kw_only=True):
     """Basic mission parameters."""
 
     ### ScenarioParams
@@ -203,7 +203,7 @@ class BasicParams(_SubParams, kw_only=True):
     settingsTimeMultiplier: int
 
 
-class AIParams(_SubParams, kw_only=True):
+class AIParams(ParamsCategory, kw_only=True):
     """AI and Balance mission parameters."""
 
     distanceSPWN: int
@@ -286,7 +286,7 @@ class AIParams(_SubParams, kw_only=True):
     A3A_ultimate_lockpickKitBreakChance: int
 
 
-class BMParams(_SubParams, kw_only=True):
+class BMParams(ParamsCategory, kw_only=True):
     """BlackMarket mission parameters."""
 
     disableTrader: bool
@@ -301,7 +301,7 @@ class BMParams(_SubParams, kw_only=True):
     A3U_blackMarketDiscountWeapon: int
 
 
-class BuilderParams(_SubParams, kw_only=True):
+class BuilderParams(ParamsCategory, kw_only=True):
     """Builder mission parameters."""
 
     A3A_builderPermissions: int
@@ -313,7 +313,7 @@ class BuilderParams(_SubParams, kw_only=True):
     maxConstructions: int
 
 
-class LootParams(_SubParams, kw_only=True):
+class LootParams(ParamsCategory, kw_only=True):
     """Loot mission parameters."""
 
     ### UnlockParams
@@ -360,7 +360,7 @@ class LootParams(_SubParams, kw_only=True):
     helmetLossSound: bool
 
 
-class ExtenderParams(_SubParams, kw_only=True):
+class ExtenderParams(ParamsCategory, kw_only=True):
     """Extender mission parameters.
 
     No members at present.
@@ -371,21 +371,21 @@ class ExtenderParams(_SubParams, kw_only=True):
     # Describes expected format.
 
 
-class ExperimentalParams(_SubParams, kw_only=True):
+class ExperimentalParams(ParamsCategory, kw_only=True):
     """Experimental mission parameters.
 
     No members at present.
     """
 
 
-class DevelopmentParams(_SubParams, kw_only=True):
+class DevelopmentParams(ParamsCategory, kw_only=True):
     """Development mission parameters."""
 
     LogLevel: int
     A3A_logDebugConsole: int
 
 
-class DeprecatedParams(_SubParams, kw_only=True):
+class DeprecatedParams(ParamsCategory, kw_only=True):
     """Deprecated mission parameters.
 
     No members at present.
