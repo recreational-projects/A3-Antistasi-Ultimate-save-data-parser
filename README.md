@@ -8,6 +8,7 @@ Pre-release/beta.
 * Designed to work with JSON from any AU >= 12.2.0 game
 * Outputs [`msgspec.Struct`](https://msgspec.dev/) class instances, validating all data types
 * `params` is parsed as a hierarchical `Params` class
+* Parameters from A3UE extenders aren't parsed at the moment
 * SteamId64s are converted to `int` and validated as 17 digit
 * players' data is parsed to `SaveData.players`, a `dict` mapping SteamId64: `PlayerData` class
 * Datetime values are parsed as Python `datetime.datetime` built-in objects
