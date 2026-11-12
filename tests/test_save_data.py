@@ -1,6 +1,7 @@
 """Tests for `save_data` module."""
 
 import datetime as dt
+import importlib.metadata
 import json
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -20,7 +21,8 @@ if TYPE_CHECKING:
 
 _JSON_OVERRIDES_PATH = Path(__file__).parent / "overrides.json"
 """NB: this is a composite sample and won't be internally consistent."""
-_PACKAGE_MINOR_VERSION = "0.10"
+
+_PACKAGE_VERSION = importlib.metadata.version("a3_antistasi_ultimate_save_data_parser")
 
 
 class TestSaveData:
@@ -58,9 +60,7 @@ class TestSaveData:
         sd = SaveData.from_json_str(base_sample_str)
         # assert
         assert isinstance(sd, SaveData)
-        assert sd.__a3_antistasi_ultimate_save_data_parser_version__.split(".")[
-            0:2
-        ] == _PACKAGE_MINOR_VERSION.split(".", maxsplit=1)
+        assert sd.__a3_antistasi_ultimate_save_data_parser_version__ == _PACKAGE_VERSION
         assert isinstance(sd.saveTime, dt.datetime)
         assert sd.saveTime.tzinfo == dt.UTC
         assert isinstance(sd.campaignID, UUID)
