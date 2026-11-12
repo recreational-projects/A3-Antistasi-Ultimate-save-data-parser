@@ -11,6 +11,8 @@ import msgspec
 if TYPE_CHECKING:
     from a3_antistasi_ultimate_save_data_parser.types import _JSONDictNode
 
+_EXTENDER_PARAM_PREFIX = "A3UE"
+
 
 class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     """Mission parameters.
@@ -18,65 +20,58 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     Ref: https://github.com/Antistasi-Ultimate-Community/A3-Antistasi-Ultimate/blob/unstable/A3A/addons/core/Params.hpp
     """
 
-    _DISCARD_KEYS: ClassVar[set[str]] = {
-        "AllParams",
-        # basic:
-        "BasicParams",
-        "BasicParamsSpacer",
-        "ScenarioParams",
-        "MemberParams",
-        "MemberParamsSpacer",
-        "ScriptParams",
-        "ScriptParamsSpacer",
-        "TimerParams",
-        "TimerParamsSpacer",
-        # ai and balance:
-        "AIParams",
-        "AIParamsSpacer",
-        "AIParamsSpacer2",
-        "BalanceParamsSpacer",
-        "RebelBalanceParams",
-        "AIBalanceParamsSpacer",
-        "AIBalanceParams",
-        "MiscBalanceParamsSpacer",
-        "MiscBalanceParams",
-        # bm:
-        "BMParams",
-        "BMParamsSpacer",
-        "BMParamsSpacer2",
-        # builder:
-        "BuilderParams",
-        "BuilderParamsSpacer",
-        # loot:
-        "LootParams",
-        "CrateParams",
-        "CrateParamsSpacer",
-        "VehicleLootParams",
-        "VehicleLootParamsSpacer",
-        "MiscLootParams",
-        "MiscLootParamsSpacer",
-        # extender:
-        "ExtenderParams",
-        "ExtenderParamsSpacer",
-        # experimental:
-        "ExperimentalParams",
-        "ExperimentalParamsSpacer",
-        # development:
-        "DevelopmentParams",
-        "DevelopmentParamsSpacer",
-        # deprecated:
-        "DeprecatedParams",
-        "DeprecatedParamsSpacer",
-        # removed:
-        "A3A_showGroupBar",
-        # Removed in A3U 12.3.0.0
-        # May appear in new exports made from A3U >= 12.2.0.0 saves,
-        # but not supported by this library.
-        "YourExtenderNameSpacer",
-        "YourExtenderNameParams",
-        "A3UE_YourExtenderName_ParamName",
-        # Explicitly discard these placeholders, probably from in-development extender
-    }
+    _NON_DATA_KEYS: ClassVar[frozenset[str]] = frozenset(
+        {
+            "AllParams",
+            # basic:
+            "BasicParams",
+            "ScenarioParams",
+            "MemberParams",
+            "ScriptParams",
+            "TimerParams",
+            # ai and balance:
+            "AIParams",
+            "RebelBalanceParams",
+            "AIBalanceParams",
+            "MiscBalanceParams",
+            # bm:
+            "BMParams",
+            # builder:
+            "BuilderParams",
+            # loot:
+            "LootParams",
+            "CrateParams",
+            "VehicleLootParams",
+            "MiscLootParams",
+            # extender:
+            "ExtenderParams",
+            # experimental:
+            "ExperimentalParams",
+            # development:
+            "DevelopmentParams",
+            # deprecated:
+            "DeprecatedParams",
+        }
+    )
+
+    _IGNORED_KEY_SUFFIX_PATTERNS: ClassVar[tuple[str, ...]] = ("Spacer", "Spacer2")
+    """"Artifacts of in-game UI."""
+
+    _IGNORED_KEYS: ClassVar[frozenset[str]] = frozenset(
+        {
+            # removed:
+            "A3A_showGroupBar",
+            # Removed in A3U 12.3.0.0
+            # May appear in new exports made from A3U >= 12.2.0.0 saves,
+            # but not supported by this library.
+            "YourExtenderNameParams",
+            "A3UE_YourExtenderName_ParamName",
+            # Explicitly discard these placeholders, probably from in-dev extender
+        }
+    )
+
+    _IGNORED_KEY_PREFIX_PATTERNS: ClassVar[tuple[str, ...]] = ("A3UE",)
+    """"Extender params ignored for now."""
 
     basic: BasicParams
     """Contains Basic mission parameters as a `BasicParams` instance.
@@ -137,25 +132,33 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
     @classmethod
     def _from_dict(cls, dict_: _JSONDictNode) -> Self:
         """Construct a type-validated instance from a `dict` JSON conversion."""
-        sub_params: dict[str, ParamsCategory] = {}
-        consumed_keys: set[str] = set()
-        for param_field_name, sub_param_type in cls._get_sub_params_types().items():
-            _sub_param_data = {
-                f: dict_.get(f) for f in sub_param_type.__struct_fields__
-            }
-            sub_params[param_field_name] = msgspec.convert(
-                _sub_param_data, sub_param_type
-            )
-            consumed_keys |= _sub_param_data.keys()
+        sub_params, consumed_keys = cls._extract_sub_params(dict_)
+        keys_to_handle = dict_.keys() - consumed_keys - cls._keys_to_ignore(dict_)
+        remaining_data = {k: dict_[k] for k in keys_to_handle if k in dict_}
 
-        remaining_data = {
-            k: dict_[k] for k in dict_ if k not in consumed_keys | cls._DISCARD_KEYS
-        }
         try:
             return msgspec.convert({**remaining_data, **sub_params}, type=cls)
         except msgspec.ValidationError as e:
             err_msg = f"Failed to create `{cls.__name__}` instance: {e.__class__}: {e}"
             raise ValueError(err_msg) from e
+
+    @classmethod
+    def _extract_sub_params(
+        cls, dict_: _JSONDictNode
+    ) -> tuple[dict[str, ParamsCategory], set[str]]:
+        """Extract and convert all categorized sub-parameters from input mapping."""
+        sub_params: dict[str, ParamsCategory] = {}
+        consumed_keys: set[str] = set()
+
+        for param_field_name, sub_param_type in cls._get_sub_params_types().items():
+            field_names = sub_param_type.__struct_fields__
+            sub_param_data = {f: dict_.get(f) for f in field_names}
+            sub_params[param_field_name] = msgspec.convert(
+                sub_param_data, sub_param_type
+            )
+            consumed_keys.update(field_names)
+
+        return sub_params, consumed_keys
 
     @classmethod
     def _get_sub_params_types(cls) -> dict[str, type[ParamsCategory]]:
@@ -165,6 +168,21 @@ class Params(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
             for m in msgspec.structs.fields(cls)
             if issubclass(m.type, ParamsCategory)
         }
+
+    @classmethod
+    def _keys_to_ignore(cls, dict_: _JSONDictNode) -> set[str]:
+        """Get a `set` of keys to ignore when creating a `Params` instance."""
+        return {k for k in dict_ if cls._is_ignored_key(k)}
+
+    @classmethod
+    def _is_ignored_key(cls, key: str) -> bool:
+        """Check if a specific key should be excluded from parameter construction."""
+        return (
+            key in cls._NON_DATA_KEYS
+            or key in cls._IGNORED_KEYS
+            or key.endswith(cls._IGNORED_KEY_SUFFIX_PATTERNS)
+            or key.startswith(cls._IGNORED_KEY_PREFIX_PATTERNS)
+        )
 
 
 class ParamsCategory(msgspec.Struct, kw_only=True, forbid_unknown_fields=True):
