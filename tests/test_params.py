@@ -36,8 +36,8 @@ class TestParams:
         ) - _sub_params_types.keys()
         # act
         # assert
-        _discard_keys = set(Params._DISCARD_KEYS)
-        assert source_dict.keys() - _discard_keys == handled_keys - _discard_keys
+        _ignored_keys = Params._keys_to_ignore(source_dict)
+        assert source_dict.keys() - _ignored_keys == handled_keys - _ignored_keys
 
     def test_from_dict(self, source_dict: _JSONDictNode) -> None:
         """Test that `Params` can be created from sample `dict`."""
@@ -72,7 +72,9 @@ class TestParams:
         my_params_relevant_keys = (
             set(my_params.__struct_fields__) | _my_params_sub_params_relevant_keys
         ) - _sub_params_types.keys()
-        assert my_params_relevant_keys == set(source_dict.keys()) - Params._DISCARD_KEYS
+        assert my_params_relevant_keys == source_dict.keys() - Params._keys_to_ignore(
+            source_dict
+        )
 
 
 def _flattened_set(iterable: Iterable[Iterable[object]]) -> set[object]:

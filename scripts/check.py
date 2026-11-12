@@ -74,13 +74,12 @@ def main() -> None:
     _sub_params_handled_keys = _flattened_set(
         cls_.__struct_fields__ for cls_ in _sub_params_types.values()
     )
+    _keys_to_ignore = Params._keys_to_ignore(input_dict)
     params_handled_keys = (
-        set(Params.__struct_fields__)
-        | set(Params._DISCARD_KEYS)
-        | _sub_params_handled_keys
+        set(Params.__struct_fields__) | _keys_to_ignore | _sub_params_handled_keys
     ) - _sub_params_types.keys()
     missing_params_input_keys = (
-        params_handled_keys - input_dict["params"].keys() - Params._DISCARD_KEYS
+        params_handled_keys - input_dict["params"].keys() - _keys_to_ignore
     )
     extra_params_input_keys = (
         input_dict["params"].keys() - params_handled_keys - player_input_keys
