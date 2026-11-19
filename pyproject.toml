@@ -79,3 +79,7 @@ runtime-evaluated-base-classes = ["msgspec.Struct"]
     "T201",  # flake8-print
     "SLF001",  # private-member-access
 ]
+
+[tool.uv]
+resolution = "lowest-direct"
+exclude-newer = "7 days"
