@@ -162,7 +162,7 @@ class SaveData(msgspec.Struct, kw_only=True):
     killZones: list[list[str | list[object]]]
     """Where `str` is a marker name."""
     gameMode: int
-    minesX: list[list[object]]
+    minesX: list[tuple[str, Position, tuple[int], int]]
     destroyedBuildings: list[Position]  # including empty []
     destroyedMilAdmins: list[Position]  # including empty []
     destroyedSites: list[Position]
