@@ -1,7 +1,7 @@
 # A3-Antistasi-Ultimate-save-data-parser
 
 Python library to parse [Antistasi Ultimate ('AU')](https://antistasiultimate.com/) save data that's been exported from the game as JSON.
-This feature was added in AU v12.2.0 (public testing release).
+This feature was added in AU v12.2.0.
 
 Pre-release/beta.
 
@@ -20,13 +20,13 @@ Pre-release/beta.
 From GitHub, specifying a version via tag, e.g:
 
 ```shell
-uv add git+https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser --tag v0.9.0
+uv add git+https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser --tag v0.11.0
 ```
 
 or with `pip`:
 
 ```shell
-pip install git+https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser@v0.9.0
+pip install git+https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser@v0.11.0
 ```
 
 
