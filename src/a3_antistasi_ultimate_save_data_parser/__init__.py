@@ -3,8 +3,8 @@
 [Changelog](https://github.com/recreational-projects/A3-antistasi-Ultimate-save-data-parser/blob/main/CHANGELOG.md)
 
 API documentation for `a3_antistasi_ultimate_save_data_parser`,
-a Python library to parse Antistasi Ultimate save data
-that's been exported from the game as JSON.
+a Python library to parse [Antistasi Ultimate](https://antistasiultimate.com/) save data
+that's been exported from the game as JSON. This feature was added in AU v12.2.0.
 
 Introduction in [README.md](https://github.com/recreational-projects/A3-Antistasi-Ultimate-save-data-parser/blob/main/README.md).
 
@@ -13,3 +13,5 @@ Introduction in [README.md](https://github.com/recreational-projects/A3-Antistas
 * `a3_antistasi_ultimate_save_data_parser.save_data.SaveData.from_json_file()`.
 * `a3_antistasi_ultimate_save_data_parser.save_data.SaveData.from_json_str()`.
 """  # noqa: D205, D400, D415
+
+__all__ = ["save_data", "params", "player_data", "position", "types"]  # noqa: RUF022

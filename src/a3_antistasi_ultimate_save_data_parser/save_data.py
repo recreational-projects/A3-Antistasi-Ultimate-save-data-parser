@@ -37,7 +37,7 @@ class SaveData(msgspec.Struct, kw_only=True):
 
     @classmethod
     def from_json_file(cls, path: Path) -> Self:
-        """Create a `SaveData` instance from a JSON string."""
+        """Create a `SaveData` instance from a JSON file."""
         with path.open() as file:
             return cls.from_json_str(file.read())
 
@@ -100,6 +100,14 @@ class SaveData(msgspec.Struct, kw_only=True):
     """Geographic time within the mission, with minutes precision. No timezone."""
     weather: list[object]
 
+    # Zones:
+    revealedZones: list[str]
+    """List of marker/town names."""
+    mrkCSAT: list[str]
+    """List of marker/town names held by Invaders."""
+    mrkSDK: list[str]  # marker names inc. "SyndHQ"
+    """List of marker/town names held by Rebels."""
+
     # Rebel faction:
     hr: int
     resourcesFIA: int
@@ -124,9 +132,8 @@ class SaveData(msgspec.Struct, kw_only=True):
     rivalsLocationsMap: dict[str, bool]  # Town names
     rivalsExcludedLocations: dict[str, object]  # including empty {}
     nextRivalsLocationReveal: float
-    mrkSDK: list[str]  # marker names inc. "SyndHQ"
     controlsSDK: list[str]
-    """List of marker names."""
+    """List of marker/town names."""
     inactivityRivals: tuple[int, list[list[float]]]
 
     # Occupants and Invaders:
@@ -136,9 +143,16 @@ class SaveData(msgspec.Struct, kw_only=True):
     invaderRadioKeys: int
     aggressionOccupants: list[object]  # observed patterns:  [1,[]]
     enemyResources: tuple[float, float, float, float]
-    mrkCSAT: list[str]
-    """List of marker/town names."""
     prestigeOPFOR: list[float]  # variable length
+
+    # Neutral entities:
+    minesX: list[tuple[str, Position, tuple[int], int]]
+    destroyedBuildings: list[Position]  # including empty []
+    destroyedMilAdmins: list[Position]  # including empty []
+    destroyedSites: list[Position]
+    antennas: list[Position]  # including empty []
+    """Destroyed antennas."""
+    A3A_fuelAmountleftArray: list[tuple[Position, float]]
 
     # Trader:
     isTraderQuestCompleted: bool
@@ -148,27 +162,17 @@ class SaveData(msgspec.Struct, kw_only=True):
     # Other / TODO:
     DLC: list[str] = []
     HQKnowledge: list[object]  # observed pattern: [float, float, [], []]
-    A3A_fuelAmountleftArray: list[tuple[Position, float]]
-    # observed patterns:
-    # []
-    # [[Position, 1] ...]
     tasks: list[object]
     bombRuns: int
     usesWurzelGarrison: bool
     wurzelGarrison: list[list[str | list[object]]]
     """Where `str` is a marker/town name."""
     supportPoints: int
-    antennas: list[Position]  # including empty []
     killZones: list[list[str | list[object]]]
     """Where `str` is a marker name."""
     gameMode: int
-    minesX: list[tuple[str, Position, tuple[int], int]]
-    destroyedBuildings: list[Position]  # including empty []
-    destroyedMilAdmins: list[Position]  # including empty []
-    destroyedSites: list[Position]
     distanceSPWN: int
     chopForest: bool
-    revealedZones: list[str]
     HR_Garage: list[object]
     jna_dataList: list[list[object]]
     staticsX: list[list[object]]
